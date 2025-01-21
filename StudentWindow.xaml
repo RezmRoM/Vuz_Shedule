@@ -21,32 +21,50 @@
                    Margin="0,0,0,20"/>
 
         <StackPanel Grid.Row="1" 
-                    Orientation="Horizontal" 
+                    Orientation="Vertical" 
                     HorizontalAlignment="Center"
                     Margin="0,0,0,20">
-            <ComboBox x:Name="FacultyComboBox"
-                      Width="200"
-                      Height="30"
-                      Margin="10,0"
-                      SelectionChanged="FacultyComboBox_SelectionChanged"/>
+            
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,20">
+                <StackPanel Margin="10,0">
+                    <Label Content="Факультет:"
+                           FontSize="14"
+                           Margin="0,0,0,5"/>
+                    <ComboBox x:Name="FacultyComboBox"
+                              Width="200"
+                              Height="30"
+                              SelectionChanged="FacultyComboBox_SelectionChanged"/>
+                </StackPanel>
 
-            <ComboBox x:Name="CourseComboBox"
-                      Width="100"
-                      Height="30"
-                      Margin="10,0"
-                      SelectionChanged="CourseComboBox_SelectionChanged"/>
+                <StackPanel Margin="10,0">
+                    <Label Content="Курс:"
+                           FontSize="14"
+                           Margin="0,0,0,5"/>
+                    <ComboBox x:Name="CourseComboBox"
+                              Width="100"
+                              Height="30"
+                              SelectionChanged="CourseComboBox_SelectionChanged"/>
+                </StackPanel>
 
-            <ComboBox x:Name="GroupComboBox"
-                      Width="150"
-                      Height="30"
-                      Margin="10,0"/>
+                <StackPanel Margin="10,0">
+                    <Label Content="Группа:"
+                           FontSize="14"
+                           Margin="0,0,0,5"/>
+                    <ComboBox x:Name="GroupComboBox"
+                              Width="150"
+                              Height="30"/>
+                </StackPanel>
 
-            <Button Content="Показать расписание"
-                    Height="30"
-                    Width="150"
-                    Margin="10,0"
-                    Background="#FFF2CC"
-                    Click="ShowScheduleButton_Click"/>
+                <StackPanel Margin="10,0" VerticalAlignment="Bottom">
+                    <Button Content="Показать расписание"
+                            Height="30"
+                            Width="150"
+                            Background="#FFF2CC"
+                            Click="ShowScheduleButton_Click"/>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
 
         <DataGrid x:Name="ScheduleDataGrid"

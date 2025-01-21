@@ -50,7 +50,7 @@ namespace Vuz_Shedule
             string email = EmailTextBox.Text;
             string password = PasswordBox.Password;
 
-            if (string.IsNullOrWhiteSpace(email) || email == "Email" ||
+            if (string.IsNullOrWhiteSpace(email) || email == "Введите email" ||
                 string.IsNullOrWhiteSpace(password))
             {
                 MessageBox.Show("Пожалуйста, заполните все поля", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -68,7 +68,10 @@ namespace Vuz_Shedule
                     {
                         query = "SELECT COUNT(*) FROM RV_Administrator WHERE email = @Email AND parol = @Password";
                     }
-                    // Добавьте здесь проверку для преподавателей, когда создадите соответствующую таблицу
+                    else if (_role == "Преподаватель")
+                    {
+                        query = "SELECT COUNT(*) FROM RV_Prepodavatel WHERE email = @Email AND password = @Password";
+                    }
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -85,7 +88,10 @@ namespace Vuz_Shedule
                                 adminWindow.Show();
                                 this.Close();
                             }
-                            // Добавьте здесь переход на окно преподавателя
+                            else if (_role == "Преподаватель")
+                            {
+                                MessageBox.Show("Функционал преподавателя находится в разработке", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
                         }
                         else
                         {

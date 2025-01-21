@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vuz_Shedule"
         mc:Ignorable="d"
-        Title="Регистрация" Height="600" Width="800"
+        Title="Регистрация" Height="700" Width="800"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Border Background="White" 
@@ -21,55 +21,63 @@
                            HorizontalAlignment="Center"
                            Margin="0,0,0,20"/>
 
+                <Label Content="Email:"
+                       FontSize="14"
+                       Margin="0,5,0,0"/>
                 <TextBox x:Name="EmailTextBox"
                          Height="40"
-                         Margin="0,10"
+                         Margin="0,5"
                          FontSize="14"
                          VerticalContentAlignment="Center"
-                         Tag="Email"
-                         GotFocus="TextBox_GotFocus"
-                         LostFocus="TextBox_LostFocus"/>
+                         Tag="Введите email"/>
 
+                <Label Content="Фамилия:"
+                       FontSize="14"
+                       Margin="0,10,0,0"/>
                 <TextBox x:Name="LastNameTextBox"
                          Height="40"
-                         Margin="0,10"
+                         Margin="0,5"
                          FontSize="14"
                          VerticalContentAlignment="Center"
-                         Tag="Фамилия"
-                         GotFocus="TextBox_GotFocus"
-                         LostFocus="TextBox_LostFocus"/>
+                         Tag="Введите фамилию"/>
 
+                <Label Content="Имя:"
+                       FontSize="14"
+                       Margin="0,10,0,0"/>
                 <TextBox x:Name="FirstNameTextBox"
                          Height="40"
-                         Margin="0,10"
+                         Margin="0,5"
                          FontSize="14"
                          VerticalContentAlignment="Center"
-                         Tag="Имя"
-                         GotFocus="TextBox_GotFocus"
-                         LostFocus="TextBox_LostFocus"/>
+                         Tag="Введите имя"/>
 
+                <Label Content="Отчество:"
+                       FontSize="14"
+                       Margin="0,10,0,0"/>
                 <TextBox x:Name="MiddleNameTextBox"
                          Height="40"
-                         Margin="0,10"
+                         Margin="0,5"
                          FontSize="14"
                          VerticalContentAlignment="Center"
-                         Tag="Отчество"
-                         GotFocus="TextBox_GotFocus"
-                         LostFocus="TextBox_LostFocus"/>
+                         Tag="Введите отчество"/>
 
+                <Label Content="Пароль:"
+                       FontSize="14"
+                       Margin="0,10,0,0"/>
                 <PasswordBox x:Name="PasswordBox"
                             Height="40"
-                            Margin="0,10"
+                            Margin="0,5"
                             FontSize="14"
-                            VerticalContentAlignment="Center"
-                            Tag="Пароль"/>
+                            VerticalContentAlignment="Center"/>
 
+                <Label Content="Подтверждение пароля:"
+                       FontSize="14"
+                       Margin="0,10,0,0"/>
                 <PasswordBox x:Name="ConfirmPasswordBox"
                             Height="40"
-                            Margin="0,10"
+                            Margin="0,5"
                             FontSize="14"
-                            VerticalContentAlignment="Center"
-                            Tag="Подтверждение пароля"/>
+                            VerticalContentAlignment="Center"/>
 
                 <Button Content="Зарегистрироваться"
                         Height="40"
