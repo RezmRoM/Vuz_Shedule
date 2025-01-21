@@ -5,36 +5,75 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vuz_Shedule"
         mc:Ignorable="d"
-        Title="Главное Меню Администратора" Height="450" Width="800">
-    <Grid>
-        <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}" Height="200" VerticalAlignment="Top"/>
-        <Button Content="Добавить" HorizontalAlignment="Left" Margin="678,224,0,0" VerticalAlignment="Top" Height="40" Width="104" Background="#FFF2CC"/>
-        <Button Content="Изменить" HorizontalAlignment="Left" Margin="678,298,0,0" VerticalAlignment="Top" Height="40" Width="104" Background="#FFF2CC"/>
-        <Button Content="Удалить" HorizontalAlignment="Left" Margin="678,374,0,0" VerticalAlignment="Top" Height="40" Width="104" RenderTransformOrigin="0.506,0.509" Background="#FFF2CC"/>
-        <TextBox HorizontalAlignment="Left" Margin="53,226,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="10,222,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="53,277,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="10,273,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="53,333,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="10,329,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="53,385,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="10,381,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="267,226,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="224,222,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="267,277,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="224,273,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="267,333,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="224,329,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="267,385,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="224,381,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="485,230,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="442,226,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="485,281,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="442,277,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="485,337,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="442,333,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
-        <TextBox HorizontalAlignment="Left" Margin="485,389,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="442,385,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        Title="Панель администратора" Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+        <!-- Заголовок -->
+        <TextBlock Text="Управление расписанием"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,20"/>
+
+        <!-- Таблица расписания -->
+        <DataGrid x:Name="ScheduleDataGrid"
+                  Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  GridLinesVisibility="All"
+                  AlternatingRowBackground="#FFF8F8F8"
+                  SelectionMode="Single"
+                  SelectionChanged="ScheduleDataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Группа" Binding="{Binding [Группа]}" Width="*"/>
+                <DataGridTextColumn Header="День недели" Binding="{Binding [День недели]}" Width="*"/>
+                <DataGridTextColumn Header="Номер пары" Binding="{Binding [Номер пары]}" Width="80"/>
+                <DataGridTextColumn Header="Предмет" Binding="{Binding [Предмет]}" Width="*"/>
+                <DataGridTextColumn Header="Тип занятия" Binding="{Binding [Тип занятия]}" Width="120"/>
+                <DataGridTextColumn Header="Преподаватель" Binding="{Binding [Преподаватель]}" Width="*"/>
+                <DataGridTextColumn Header="Аудитория" Binding="{Binding [Аудитория]}" Width="100"/>
+                <DataGridTextColumn Header="Четность недели" Binding="{Binding [Четность недели]}" Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Панель управления -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Center"
+                    Margin="0,20,0,0">
+            <Button Content="Добавить"
+                    Width="120"
+                    Height="40"
+                    Margin="10,0"
+                    Background="#FFF2CC"
+                    Click="AddButton_Click"/>
+
+            <Button Content="Изменить"
+                    Width="120"
+                    Height="40"
+                    Margin="10,0"
+                    Background="#FFF2CC"
+                    Click="EditButton_Click"/>
+
+            <Button Content="Удалить"
+                    Width="120"
+                    Height="40"
+                    Margin="10,0"
+                    Background="#FFF2CC"
+                    Click="DeleteButton_Click"/>
+
+            <Button Content="Обновить"
+                    Width="120"
+                    Height="40"
+                    Margin="10,0"
+                    Background="#FFF2CC"
+                    Click="RefreshButton_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
