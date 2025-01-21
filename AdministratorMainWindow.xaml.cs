@@ -11,13 +11,12 @@ namespace Vuz_Shedule
     /// </summary>
     public partial class AdministratorMainWindow : Window
     {
-        private readonly string _connectionString;
+        private string connectionString = "data source=stud-mssql.sttec.yar.ru,38325;user id=user122_db;password=user122;MultipleActiveResultSets=True;App=EntityFramework";
         private DataRowView _selectedRow;
 
         public AdministratorMainWindow()
         {
             InitializeComponent();
-            _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             LoadSchedule();
             LoadComboBoxes();
         }
@@ -126,7 +125,7 @@ namespace Vuz_Shedule
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     string query = @"SELECT * FROM RV_Raspisanie_Polnoe
