@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{YOUR-GUID-HERE}</ProjectGuid>
+    <ProjectGuid>{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Vuz_Shedule</RootNamespace>
     <AssemblyName>Vuz_Shedule</AssemblyName>

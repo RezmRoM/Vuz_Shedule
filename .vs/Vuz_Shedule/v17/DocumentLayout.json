@@ -3,24 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\studentwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:studentwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\administratormainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:administratormainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|c:\\users\\roma_w\\desktop\\ewrgre\\teacherwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|c:\\users\\roma_w\\desktop\\ewrgre\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|c:\\users\\roma_w\\desktop\\ewrgre\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|c:\\users\\roma_w\\desktop\\ewrgre\\autorizationwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:autorizationwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|c:\\users\\roma_w\\desktop\\ewrgre\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|c:\\users\\roma_w\\desktop\\ewrgre\\teacherwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:teacherwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\teacherwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:teacherwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\registrationwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:registrationwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|c:\\users\\roma_w\\desktop\\ewrgre\\autorizationwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:autorizationwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\studentwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
@@ -31,8 +39,20 @@
       "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:administratormainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\administratormainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:administratormainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|c:\\users\\roma_w\\desktop\\ewrgre\\studentwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:studentwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\autorizationwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:autorizationwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\registrationwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:registrationwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|C:\\Users\\ROMA_W\\Desktop\\ewrgre\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4790AC1F-7FCE-4A42-87CD-5294A5822FDC}|Vuz_Shedule.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -47,6 +67,67 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "App.config",
+              "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\App.config",
+              "RelativeDocumentMoniker": "App.config",
+              "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\App.config",
+              "RelativeToolTip": "App.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-01-21T15:54:29.381Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\App.xaml",
+              "RelativeDocumentMoniker": "App.xaml",
+              "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\App.xaml",
+              "RelativeToolTip": "App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-21T15:54:26.786Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AutorizationWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AutorizationWindow.xaml",
+              "RelativeDocumentMoniker": "AutorizationWindow.xaml",
+              "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AutorizationWindow.xaml",
+              "RelativeToolTip": "AutorizationWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-21T15:54:23.108Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-21T15:54:20.444Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TeacherWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\TeacherWindow.xaml",
+              "RelativeDocumentMoniker": "TeacherWindow.xaml",
+              "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\TeacherWindow.xaml",
+              "RelativeToolTip": "TeacherWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-21T15:54:15.315Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "TeacherWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\TeacherWindow.xaml.cs",
               "RelativeDocumentMoniker": "TeacherWindow.xaml.cs",
@@ -59,19 +140,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
+              "Title": "AdministratorMainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AdministratorMainWindow.xaml",
+              "RelativeDocumentMoniker": "AdministratorMainWindow.xaml",
+              "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AdministratorMainWindow.xaml",
+              "RelativeToolTip": "AdministratorMainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-21T12:51:30.372Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "AdministratorMainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AdministratorMainWindow.xaml.cs",
               "RelativeDocumentMoniker": "AdministratorMainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AdministratorMainWindow.xaml.cs",
               "RelativeToolTip": "AdministratorMainWindow.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-21T12:56:00.114Z"
+              "WhenOpened": "2025-01-21T12:56:00.114Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 11,
               "Title": "RegistrationWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\RegistrationWindow.xaml.cs",
               "RelativeDocumentMoniker": "RegistrationWindow.xaml.cs",
@@ -79,12 +173,11 @@
               "RelativeToolTip": "RegistrationWindow.xaml.cs",
               "ViewState": "AgIAAFAAAAAAAAAAAAAIwFoAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-21T12:54:48.224Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-21T12:54:48.224Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 12,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
@@ -92,12 +185,11 @@
               "RelativeToolTip": "MainWindow.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-21T12:54:44.113Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-21T12:54:44.113Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 10,
               "Title": "AutorizationWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AutorizationWindow.xaml.cs",
               "RelativeDocumentMoniker": "AutorizationWindow.xaml.cs",
@@ -110,38 +202,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "StudentWindow.xaml",
               "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\StudentWindow.xaml",
               "RelativeDocumentMoniker": "StudentWindow.xaml",
               "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\StudentWindow.xaml",
               "RelativeToolTip": "StudentWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-01-21T12:59:32.375Z"
+              "WhenOpened": "2025-01-21T12:59:32.375Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 9,
               "Title": "StudentWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\StudentWindow.xaml.cs",
               "RelativeDocumentMoniker": "StudentWindow.xaml.cs",
               "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\StudentWindow.xaml.cs",
               "RelativeToolTip": "StudentWindow.xaml.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAQwFUAAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAJUAAAAAAAAAAAAkwLIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-21T12:51:41.099Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "AdministratorMainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AdministratorMainWindow.xaml",
-              "RelativeDocumentMoniker": "AdministratorMainWindow.xaml",
-              "ToolTip": "C:\\Users\\ROMA_W\\Desktop\\ewrgre\\AdministratorMainWindow.xaml",
-              "RelativeToolTip": "AdministratorMainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-01-21T12:51:30.372Z"
             }
           ]
         }

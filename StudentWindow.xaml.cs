@@ -3,7 +3,6 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Data.SqlClient;
-using System.Configuration;
 
 namespace Vuz_Shedule
 {
@@ -11,12 +10,12 @@ namespace Vuz_Shedule
     {
         private string connectionString = "data source=stud-mssql.sttec.yar.ru,38325;user id=user122_db;password=user122;MultipleActiveResultSets=True;App=EntityFramework";
 
-
         public StudentWindow()
         {
             InitializeComponent();
             LoadFaculties();
             InitializeCourseComboBox();
+            LoadGroups();
         }
 
         private void LoadFaculties()
@@ -51,29 +50,31 @@ namespace Vuz_Shedule
 
         private void InitializeCourseComboBox()
         {
-            for (int i = 1; i <= 6; i++)
+            try
             {
-                ComboBoxItem item = new ComboBoxItem
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    Content = i
-                };
-                CourseComboBox.Items.Add(item);
+                    connection.Open();
+                    string query = "SELECT DISTINCT nomer_kursa FROM RV_Gruppa";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ComboBoxItem item = new ComboBoxItem
+                                {
+                                    Content = reader["nomer_kursa"].ToString()
+                                };
+                                CourseComboBox.Items.Add(item);
+                            }
+                        }
+                    }
+                }
             }
-        }
-
-        private void FacultyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (FacultyComboBox.SelectedItem != null && CourseComboBox.SelectedItem != null)
+            catch (Exception ex)
             {
-                LoadGroups();
-            }
-        }
-
-        private void CourseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (FacultyComboBox.SelectedItem != null && CourseComboBox.SelectedItem != null)
-            {
-                LoadGroups();
+                MessageBox.Show($"Ошибка при загрузке курсов: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -81,23 +82,12 @@ namespace Vuz_Shedule
         {
             try
             {
-                GroupComboBox.Items.Clear();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = @"
-                        SELECT DISTINCT g.nazvanie_gruppy 
-                        FROM RV_Gruppa g
-                        JOIN RV_Fakultet f ON g.id_fakultet = f.id_fakultet
-                        WHERE f.nazvanie_instituta = @Faculty 
-                        AND g.nomer_kursa = @Course
-                        ORDER BY g.nazvanie_gruppy";
-
+                    string query = "SELECT nazvanie_gruppy FROM RV_Gruppa";
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@Faculty", (FacultyComboBox.SelectedItem as ComboBoxItem).Content.ToString());
-                        command.Parameters.AddWithValue("@Course", (CourseComboBox.SelectedItem as ComboBoxItem).Content);
-
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -116,6 +106,21 @@ namespace Vuz_Shedule
             {
                 MessageBox.Show($"Ошибка при загрузке групп: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void FacultyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Здесь можно добавить логику для фильтрации групп по выбранному факультету
+        }
+
+        private void CourseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Здесь можно добавить логику для фильтрации групп по выбранному курсу
+        }
+
+        private void GroupComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Здесь можно добавить логику для обработки выбора группы
         }
 
         private void ShowScheduleButton_Click(object sender, RoutedEventArgs e)
@@ -149,11 +154,11 @@ namespace Vuz_Shedule
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@GroupName", (GroupComboBox.SelectedItem as ComboBoxItem).Content.ToString());
-                        
+
                         SqlDataAdapter adapter = new SqlDataAdapter(command);
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
-                        
+
                         ScheduleDataGrid.ItemsSource = dataTable.DefaultView;
                     }
                 }
@@ -171,4 +176,4 @@ namespace Vuz_Shedule
             this.Close();
         }
     }
-} 
+}
