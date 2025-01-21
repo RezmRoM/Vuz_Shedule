@@ -3,6 +3,7 @@ using System.Data;
 using System.Windows;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Windows.Controls;
 
 namespace Vuz_Shedule
 {
@@ -25,7 +26,7 @@ namespace Vuz_Shedule
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
 
@@ -162,7 +163,7 @@ namespace Vuz_Shedule
             {
                 if (!ValidateInput()) return;
 
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     string query = @"INSERT INTO RV_Zanyatie 

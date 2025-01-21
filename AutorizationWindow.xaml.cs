@@ -10,13 +10,12 @@ namespace Vuz_Shedule
     public partial class AutorizationWindow : Window
     {
         private readonly string _role;
-        private readonly string _connectionString;
+        private string connectionString = "data source=stud-mssql.sttec.yar.ru,38325;user id=user122_db;password=user122;MultipleActiveResultSets=True;App=EntityFramework";
 
         public AutorizationWindow(string role)
         {
             InitializeComponent();
             _role = role;
-            _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             if (_role == "Администратор")
             {
@@ -59,7 +58,7 @@ namespace Vuz_Shedule
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     string query = "";
