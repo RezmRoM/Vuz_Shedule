@@ -1,0 +1,40 @@
+﻿<Window x:Class="Vuz_Shedule.AdministratorMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Vuz_Shedule"
+        mc:Ignorable="d"
+        Title="Главное Меню Администратора" Height="450" Width="800">
+    <Grid>
+        <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}" Height="200" VerticalAlignment="Top"/>
+        <Button Content="Добавить" HorizontalAlignment="Left" Margin="678,224,0,0" VerticalAlignment="Top" Height="40" Width="104" Background="#FFF2CC"/>
+        <Button Content="Изменить" HorizontalAlignment="Left" Margin="678,298,0,0" VerticalAlignment="Top" Height="40" Width="104" Background="#FFF2CC"/>
+        <Button Content="Удалить" HorizontalAlignment="Left" Margin="678,374,0,0" VerticalAlignment="Top" Height="40" Width="104" RenderTransformOrigin="0.506,0.509" Background="#FFF2CC"/>
+        <TextBox HorizontalAlignment="Left" Margin="53,226,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="10,222,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="53,277,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="10,273,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="53,333,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="10,329,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="53,385,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="10,381,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="267,226,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="224,222,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="267,277,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="224,273,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="267,333,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="224,329,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="267,385,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="224,381,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="485,230,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="442,226,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="485,281,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="442,277,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="485,337,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="442,333,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+        <TextBox HorizontalAlignment="Left" Margin="485,389,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Label" HorizontalAlignment="Left" Margin="442,385,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.013,0.329"/>
+
+    </Grid>
+</Window>

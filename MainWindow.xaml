@@ -1,0 +1,70 @@
+﻿<Window x:Class="Vuz_Shedule.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Vuz_Shedule"
+        mc:Ignorable="d"
+        Title="Меню Выбора роли" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <!-- Define rows for layout -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- For images -->
+            <RowDefinition Height="Auto" />
+            <!-- For buttons -->
+        </Grid.RowDefinitions>
+
+        <!-- Define columns for layout -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Images Section -->
+        <Image Source="teacher.jpg" 
+               Grid.Row="0" Grid.Column="0" 
+               HorizontalAlignment="Center" 
+               VerticalAlignment="Center" 
+               Width="150" Height="150" 
+               Margin="10"/>
+
+        <Image Source="student.jpg" 
+               Grid.Row="0" Grid.Column="1" 
+               HorizontalAlignment="Center" 
+               VerticalAlignment="Center" 
+               Width="150" Height="150" 
+               Margin="10"/>
+
+        <Image Source="administrator.jpg" 
+               Grid.Row="0" Grid.Column="2" 
+               HorizontalAlignment="Center" 
+               VerticalAlignment="Center" 
+               Width="150" Height="150" 
+               Margin="10"/>
+
+        <!-- Buttons Section -->
+        <Button Content="Преподаватель" 
+                Width="120" Height="50" 
+                Margin="10" 
+                Background="#FFDEC44D"
+                Grid.Row="1" Grid.Column="0"
+                Click="TeacherButton_Click"/>
+
+        <Button Content="Студент" 
+                Width="120" Height="50" 
+                Margin="10" 
+                Background="#FFDEC44D"
+                Grid.Row="1" Grid.Column="1"
+                Click="StudentButton_Click"/>
+
+        <Button Content="Администратор" 
+                Width="120" Height="50" 
+                Margin="10" 
+                Background="#FFDEC44D"
+                Grid.Row="1" Grid.Column="2"
+                Click="AdminButton_Click"/>
+    </Grid>
+</Window>

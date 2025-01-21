@@ -1,0 +1,89 @@
+<Window x:Class="Vuz_Shedule.RegistrationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Vuz_Shedule"
+        mc:Ignorable="d"
+        Title="Регистрация" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Border Background="White" 
+                CornerRadius="20" 
+                Margin="20"
+                Effect="{DynamicResource MaterialDesignElevationShadow2}">
+            <StackPanel VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" 
+                        Width="400">
+                <TextBlock Text="Регистрация"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20"/>
+
+                <TextBox x:Name="EmailTextBox"
+                         Height="40"
+                         Margin="0,10"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Tag="Email"
+                         GotFocus="TextBox_GotFocus"
+                         LostFocus="TextBox_LostFocus"/>
+
+                <TextBox x:Name="LastNameTextBox"
+                         Height="40"
+                         Margin="0,10"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Tag="Фамилия"
+                         GotFocus="TextBox_GotFocus"
+                         LostFocus="TextBox_LostFocus"/>
+
+                <TextBox x:Name="FirstNameTextBox"
+                         Height="40"
+                         Margin="0,10"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Tag="Имя"
+                         GotFocus="TextBox_GotFocus"
+                         LostFocus="TextBox_LostFocus"/>
+
+                <TextBox x:Name="MiddleNameTextBox"
+                         Height="40"
+                         Margin="0,10"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Tag="Отчество"
+                         GotFocus="TextBox_GotFocus"
+                         LostFocus="TextBox_LostFocus"/>
+
+                <PasswordBox x:Name="PasswordBox"
+                            Height="40"
+                            Margin="0,10"
+                            FontSize="14"
+                            VerticalContentAlignment="Center"
+                            Tag="Пароль"/>
+
+                <PasswordBox x:Name="ConfirmPasswordBox"
+                            Height="40"
+                            Margin="0,10"
+                            FontSize="14"
+                            VerticalContentAlignment="Center"
+                            Tag="Подтверждение пароля"/>
+
+                <Button Content="Зарегистрироваться"
+                        Height="40"
+                        Margin="0,20"
+                        Background="#FFF2CC"
+                        BorderThickness="0"
+                        Click="RegisterButton_Click"/>
+
+                <TextBlock Text="Уже есть аккаунт? Войти"
+                           HorizontalAlignment="Center"
+                           Foreground="Blue"
+                           Cursor="Hand"
+                           MouseDown="LoginLink_MouseDown"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window> 

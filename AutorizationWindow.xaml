@@ -1,0 +1,56 @@
+<Window x:Class="Vuz_Shedule.AutorizationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Vuz_Shedule"
+        mc:Ignorable="d"
+        Title="Авторизация" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Border Background="White" 
+                CornerRadius="20" 
+                Margin="20"
+                Effect="{DynamicResource MaterialDesignElevationShadow2}">
+            <StackPanel VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" 
+                        Width="300">
+                <TextBlock Text="Авторизация"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20"/>
+                
+                <TextBox x:Name="EmailTextBox"
+                         Height="40"
+                         Margin="0,10"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Tag="Email"
+                         GotFocus="TextBox_GotFocus"
+                         LostFocus="TextBox_LostFocus"/>
+
+                <PasswordBox x:Name="PasswordBox"
+                            Height="40"
+                            Margin="0,10"
+                            FontSize="14"
+                            VerticalContentAlignment="Center"
+                            Tag="Пароль"/>
+
+                <Button Content="Войти"
+                        Height="40"
+                        Margin="0,20"
+                        Background="#FFF2CC"
+                        BorderThickness="0"
+                        Click="LoginButton_Click"/>
+
+                <TextBlock x:Name="RegisterLink"
+                           Text="Зарегистрироваться"
+                           HorizontalAlignment="Center"
+                           Foreground="Blue"
+                           Cursor="Hand"
+                           MouseDown="RegisterLink_MouseDown"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window> 
