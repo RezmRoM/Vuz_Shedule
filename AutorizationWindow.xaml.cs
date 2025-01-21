@@ -10,12 +10,14 @@ namespace Vuz_Shedule
     public partial class AutorizationWindow : Window
     {
         private readonly string _role;
-        private string connectionString = "data source=stud-mssql.sttec.yar.ru,38325;user id=user122_db;password=user122;MultipleActiveResultSets=True;App=EntityFramework";
+        private readonly string _connectionString;
 
         public AutorizationWindow(string role)
         {
             InitializeComponent();
             _role = role;
+            _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
             if (_role == "Администратор")
             {
                 RegisterLink.Visibility = Visibility.Collapsed;
@@ -48,7 +50,7 @@ namespace Vuz_Shedule
             string email = EmailTextBox.Text;
             string password = PasswordBox.Password;
 
-            if (string.IsNullOrWhiteSpace(email) || email == "Введите email" ||
+            if (string.IsNullOrWhiteSpace(email) || email == "Email" ||
                 string.IsNullOrWhiteSpace(password))
             {
                 MessageBox.Show("Пожалуйста, заполните все поля", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -57,7 +59,7 @@ namespace Vuz_Shedule
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
                     string query = "";
@@ -88,7 +90,9 @@ namespace Vuz_Shedule
                             }
                             else if (_role == "Преподаватель")
                             {
-                                MessageBox.Show("Функционал преподавателя находится в разработке", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                                TeacherWindow teacherWindow = new TeacherWindow(email);
+                                teacherWindow.Show();
+                                this.Close();
                             }
                         }
                         else
@@ -106,9 +110,12 @@ namespace Vuz_Shedule
 
         private void RegisterLink_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            RegistrationWindow registrationWindow = new RegistrationWindow(_role);
-            registrationWindow.Show();
-            this.Close();
+            if (_role == "Преподаватель")
+            {
+                RegistrationWindow registrationWindow = new RegistrationWindow(_role);
+                registrationWindow.Show();
+                this.Close();
+            }
         }
     }
 } 

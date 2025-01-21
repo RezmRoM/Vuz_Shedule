@@ -11,12 +11,23 @@ namespace Vuz_Shedule
     public partial class RegistrationWindow : Window
     {
         private readonly string _role;
-        private string connectionString = "data source=stud-mssql.sttec.yar.ru,38325;user id=user122_db;password=user122;MultipleActiveResultSets=True;App=EntityFramework";
+        private readonly string _connectionString;
 
         public RegistrationWindow(string role)
         {
             InitializeComponent();
             _role = role;
+            _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            if (_role != "Преподаватель")
+            {
+                MessageBox.Show("Регистрация доступна только для преподавателей", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                AutorizationWindow authWindow = new AutorizationWindow(_role);
+                authWindow.Show();
+                this.Close();
+                return;
+            }
+
             EmailTextBox.Tag = "Email";
             LastNameTextBox.Tag = "Фамилия";
             FirstNameTextBox.Tag = "Имя";
@@ -78,19 +89,28 @@ namespace Vuz_Shedule
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
-                    string query = "";
 
-                    if (_role == "Преподаватель")
+                    // Проверка существования email
+                    string checkEmailQuery = "SELECT COUNT(*) FROM RV_Prepodavatel WHERE email = @Email";
+                    using (SqlCommand checkCommand = new SqlCommand(checkEmailQuery, connection))
                     {
-                        query = @"INSERT INTO RV_Prepodavatel (email, familia, imya, otchestvo, parol)
-                                 VALUES (@Email, @LastName, @FirstName, @MiddleName, @Password)";
+                        checkCommand.Parameters.AddWithValue("@Email", email);
+                        int count = (int)checkCommand.ExecuteScalar();
+                        if (count > 0)
+                        {
+                            MessageBox.Show("Пользователь с таким email уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
                     }
-                    // В данном случае регистрация администратора не предусмотрена
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    // Регистрация преподавателя
+                    string registerQuery = @"INSERT INTO RV_Prepodavatel (email, familia, imya, otchestvo, password)
+                                          VALUES (@Email, @LastName, @FirstName, @MiddleName, @Password)";
+
+                    using (SqlCommand command = new SqlCommand(registerQuery, connection))
                     {
                         command.Parameters.AddWithValue("@Email", email);
                         command.Parameters.AddWithValue("@LastName", lastName);

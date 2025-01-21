@@ -3,17 +3,17 @@ using System.Data;
 using System.Windows;
 using System.Data.SqlClient;
 using System.Configuration;
-using System.Collections.Generic;
 
 namespace Vuz_Shedule
 {
     public partial class StudentWindow : Window
     {
-        private string connectionString = "data source=stud-mssql.sttec.yar.ru,38325;user id=user122_db;password=user122;MultipleActiveResultSets=True;App=EntityFramework";
+        private readonly string _connectionString;
 
         public StudentWindow()
         {
             InitializeComponent();
+            _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             LoadFaculties();
             InitializeCourseComboBox();
         }
@@ -22,7 +22,7 @@ namespace Vuz_Shedule
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
                     string query = "SELECT nazvanie_instituta FROM RV_Fakultet";
@@ -73,7 +73,7 @@ namespace Vuz_Shedule
             try
             {
                 GroupComboBox.Items.Clear();
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
                     string query = @"
@@ -114,7 +114,7 @@ namespace Vuz_Shedule
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
                     string query = @"
@@ -148,6 +148,13 @@ namespace Vuz_Shedule
             {
                 MessageBox.Show($"Ошибка при загрузке расписания: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
         }
     }
 } 
