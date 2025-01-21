@@ -9,12 +9,11 @@ namespace Vuz_Shedule
 {
     public partial class StudentWindow : Window
     {
-        private readonly string _connectionString;
+        private string connectionString = "data source=stud-mssql.sttec.yar.ru,38325;user id=user122_db;password=user122;MultipleActiveResultSets=True;App=EntityFramework";
 
         public StudentWindow()
         {
             InitializeComponent();
-            _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             LoadFaculties();
             InitializeCourseComboBox();
         }
@@ -23,7 +22,7 @@ namespace Vuz_Shedule
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     string query = "SELECT nazvanie_instituta FROM RV_Fakultet";
@@ -74,13 +73,13 @@ namespace Vuz_Shedule
             try
             {
                 GroupComboBox.Items.Clear();
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     string query = @"
                         SELECT g.nazvanie_gruppy 
                         FROM RV_Gruppa g
-                        JOIN RV_Fakultet f ON g.id_fakulteta = f.id_fakulteta
+                        JOIN RV_Fakultet f ON g.id_fakultet = f.id_fakultet
                         WHERE f.nazvanie_instituta = @Faculty 
                         AND g.nomer_kursa = @Course";
 
@@ -115,7 +114,7 @@ namespace Vuz_Shedule
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     string query = @"

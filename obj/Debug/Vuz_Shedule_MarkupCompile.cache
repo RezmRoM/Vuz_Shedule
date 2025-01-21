@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Vuz_Shedule\Vuz_Shedule\obj\Debug\
+C:\Users\ROMA_W\Desktop\ewrgre\obj\Debug\
 Vuz_Shedule
 none
 false
 DEBUG;TRACE
-D:\Vuz_Shedule\Vuz_Shedule\App.xaml
-3-853999935
+C:\Users\ROMA_W\Desktop\ewrgre\App.xaml
+5-1630385354
 
-7221538365
-13-38814620
-AdministratorAutorizationWindow.xaml;AdministratorMainWindow.xaml;MainWindow.xaml;
+9-1983027672
+14-1486485296
+AdministratorMainWindow.xaml;AutorizationWindow.xaml;MainWindow.xaml;RegistrationWindow.xaml;StudentWindow.xaml;
 
 False
 
