@@ -146,5 +146,12 @@ namespace Vuz_Shedule
             authWindow.Show();
             this.Close();
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            AutorizationWindow authWindow = new AutorizationWindow(_role);
+            authWindow.Show();
+            this.Close();
+        }
     }
 } 

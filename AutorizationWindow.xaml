@@ -8,7 +8,43 @@
         Title="Авторизация" Height="450" Width="800"
         WindowStartupLocation="CenterScreen">
     <Grid>
-        <Border Background="White" 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Кнопка "Назад" -->
+        <Button x:Name="BackButton"
+                Width="40" 
+                Height="40"
+                Background="White"
+                BorderBrush="#E0E0E0"
+                BorderThickness="1"
+                Click="BackButton_Click"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="20,20,0,0"
+                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}"/>
+                        <ContentPresenter HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"/>
+                    </Grid>
+                </ControlTemplate>
+            </Button.Template>
+            <TextBlock Text="&lt;"
+                      FontSize="20"
+                      Foreground="Black"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"/>
+        </Button>
+
+        <Border Grid.Row="1"
+                Background="White" 
                 CornerRadius="20" 
                 Margin="20"
                 Effect="{DynamicResource MaterialDesignElevationShadow2}">
@@ -29,7 +65,7 @@
                          Margin="0,5"
                          FontSize="14"
                          VerticalContentAlignment="Center"
-                         Tag="Введите email"
+                         Tag="Email"
                          GotFocus="TextBox_GotFocus"
                          LostFocus="TextBox_LostFocus"/>
 

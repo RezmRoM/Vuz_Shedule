@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 using System.Data.SqlClient;
 using System.Configuration;
 
@@ -11,12 +12,13 @@ namespace Vuz_Shedule
     /// </summary>
     public partial class AdministratorMainWindow : Window
     {
-        private string connectionString = "data source=stud-mssql.sttec.yar.ru,38325;user id=user122_db;password=user122;MultipleActiveResultSets=True;App=EntityFramework";
+        private readonly string _connectionString;
         private DataRowView _selectedRow;
 
         public AdministratorMainWindow()
         {
             InitializeComponent();
+            _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             LoadSchedule();
             LoadComboBoxes();
         }
@@ -37,11 +39,12 @@ namespace Vuz_Shedule
                         {
                             while (reader.Read())
                             {
-                                SubjectComboBox.Items.Add(new ComboBoxItem 
-                                { 
+                                ComboBoxItem item = new ComboBoxItem
+                                {
                                     Content = reader["nazvanie_predmeta"].ToString(),
                                     Tag = reader["id_predmeta"]
-                                });
+                                };
+                                SubjectComboBox.Items.Add(item);
                             }
                         }
                     }
@@ -54,11 +57,12 @@ namespace Vuz_Shedule
                         {
                             while (reader.Read())
                             {
-                                TeacherComboBox.Items.Add(new ComboBoxItem 
-                                { 
+                                ComboBoxItem item = new ComboBoxItem
+                                {
                                     Content = reader["fio"].ToString(),
                                     Tag = reader["id_prepodavatelya"]
-                                });
+                                };
+                                TeacherComboBox.Items.Add(item);
                             }
                         }
                     }
@@ -71,11 +75,12 @@ namespace Vuz_Shedule
                         {
                             while (reader.Read())
                             {
-                                ClassroomComboBox.Items.Add(new ComboBoxItem 
-                                { 
+                                ComboBoxItem item = new ComboBoxItem
+                                {
                                     Content = reader["nazvanie_auditorii"].ToString(),
                                     Tag = reader["id_auditorii"]
-                                });
+                                };
+                                ClassroomComboBox.Items.Add(item);
                             }
                         }
                     }
@@ -88,11 +93,12 @@ namespace Vuz_Shedule
                         {
                             while (reader.Read())
                             {
-                                DayComboBox.Items.Add(new ComboBoxItem 
-                                { 
+                                ComboBoxItem item = new ComboBoxItem
+                                {
                                     Content = reader["nazvanie"].ToString(),
                                     Tag = reader["id_den_nedeli"]
-                                });
+                                };
+                                DayComboBox.Items.Add(item);
                             }
                         }
                     }
@@ -105,11 +111,12 @@ namespace Vuz_Shedule
                         {
                             while (reader.Read())
                             {
-                                LessonTypeComboBox.Items.Add(new ComboBoxItem 
-                                { 
+                                ComboBoxItem item = new ComboBoxItem
+                                {
                                     Content = reader["nazvanie"].ToString(),
                                     Tag = reader["id_tip_zanyatia"]
-                                });
+                                };
+                                LessonTypeComboBox.Items.Add(item);
                             }
                         }
                     }
@@ -125,7 +132,7 @@ namespace Vuz_Shedule
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
                     string query = @"SELECT * FROM RV_Raspisanie_Polnoe
@@ -250,8 +257,69 @@ namespace Vuz_Shedule
                 return;
             }
 
-            // TODO: Реализовать редактирование записи
-            MessageBox.Show("Функция редактирования записи находится в разработке", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    // Получаем ID занятия
+                    string getIdQuery = @"
+                        SELECT z.id_zanyatia
+                        FROM RV_Zanyatie z
+                        JOIN RV_Prepodavatel pr ON z.id_prepodavatelya = pr.id_prepodavatelya
+                        JOIN RV_Predmet p ON z.id_predmeta = p.id_predmeta
+                        JOIN RV_Den_Nedeli dn ON z.id_den_nedeli = dn.id_den_nedeli
+                        WHERE CONCAT(pr.familia, ' ', pr.imya, ' ', pr.otchestvo) = @Teacher
+                        AND p.nazvanie_predmeta = @Subject
+                        AND dn.nazvanie = @Day
+                        AND z.nomer_pary = @LessonNumber";
+
+                    using (SqlCommand command = new SqlCommand(getIdQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Teacher", _selectedRow["Преподаватель"].ToString());
+                        command.Parameters.AddWithValue("@Subject", _selectedRow["Предмет"].ToString());
+                        command.Parameters.AddWithValue("@Day", _selectedRow["День недели"].ToString());
+                        command.Parameters.AddWithValue("@LessonNumber", _selectedRow["Номер пары"]);
+
+                        int zanyatieId = (int)command.ExecuteScalar();
+
+                        // Обновляем данные
+                        string updateQuery = @"
+                            UPDATE RV_Zanyatie 
+                            SET id_predmeta = @SubjectId,
+                                id_prepodavatelya = @TeacherId,
+                                id_auditorii = @ClassroomId,
+                                id_den_nedeli = @DayId,
+                                nomer_pary = @LessonNumber,
+                                chetnost_nedeli = @WeekParity,
+                                polnost_gruppy = @GroupComposition,
+                                id_tip_zanyatia = @LessonTypeId
+                            WHERE id_zanyatia = @ZanyatieId";
+
+                        using (SqlCommand updateCommand = new SqlCommand(updateQuery, connection))
+                        {
+                            updateCommand.Parameters.AddWithValue("@SubjectId", (SubjectComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                            updateCommand.Parameters.AddWithValue("@TeacherId", (TeacherComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                            updateCommand.Parameters.AddWithValue("@ClassroomId", (ClassroomComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                            updateCommand.Parameters.AddWithValue("@DayId", (DayComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                            updateCommand.Parameters.AddWithValue("@LessonNumber", int.Parse(LessonNumberTextBox.Text));
+                            updateCommand.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
+                            updateCommand.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
+                            updateCommand.Parameters.AddWithValue("@LessonTypeId", (LessonTypeComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                            updateCommand.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+
+                            updateCommand.ExecuteNonQuery();
+                            MessageBox.Show("Занятие успешно обновлено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                            LoadSchedule();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -267,8 +335,58 @@ namespace Vuz_Shedule
 
             if (result == MessageBoxResult.Yes)
             {
-                // TODO: Реализовать удаление записи
-                MessageBox.Show("Функция удаления записи находится в разработке", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(_connectionString))
+                    {
+                        connection.Open();
+
+                        // Получаем ID занятия
+                        string getIdQuery = @"
+                            SELECT z.id_zanyatia
+                            FROM RV_Zanyatie z
+                            JOIN RV_Prepodavatel pr ON z.id_prepodavatelya = pr.id_prepodavatelya
+                            JOIN RV_Predmet p ON z.id_predmeta = p.id_predmeta
+                            JOIN RV_Den_Nedeli dn ON z.id_den_nedeli = dn.id_den_nedeli
+                            WHERE CONCAT(pr.familia, ' ', pr.imya, ' ', pr.otchestvo) = @Teacher
+                            AND p.nazvanie_predmeta = @Subject
+                            AND dn.nazvanie = @Day
+                            AND z.nomer_pary = @LessonNumber";
+
+                        using (SqlCommand command = new SqlCommand(getIdQuery, connection))
+                        {
+                            command.Parameters.AddWithValue("@Teacher", _selectedRow["Преподаватель"].ToString());
+                            command.Parameters.AddWithValue("@Subject", _selectedRow["Предмет"].ToString());
+                            command.Parameters.AddWithValue("@Day", _selectedRow["День недели"].ToString());
+                            command.Parameters.AddWithValue("@LessonNumber", _selectedRow["Номер пары"]);
+
+                            int zanyatieId = (int)command.ExecuteScalar();
+
+                            // Удаляем связи в расписании групп
+                            string deleteRaspisanieQuery = "DELETE FROM RV_Raspisanie_Gruppy WHERE id_zanyatia = @ZanyatieId";
+                            using (SqlCommand deleteRaspisanieCommand = new SqlCommand(deleteRaspisanieQuery, connection))
+                            {
+                                deleteRaspisanieCommand.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+                                deleteRaspisanieCommand.ExecuteNonQuery();
+                            }
+
+                            // Удаляем само занятие
+                            string deleteZanyatieQuery = "DELETE FROM RV_Zanyatie WHERE id_zanyatia = @ZanyatieId";
+                            using (SqlCommand deleteZanyatieCommand = new SqlCommand(deleteZanyatieQuery, connection))
+                            {
+                                deleteZanyatieCommand.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+                                deleteZanyatieCommand.ExecuteNonQuery();
+                            }
+
+                            MessageBox.Show("Занятие успешно удалено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                            LoadSchedule();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

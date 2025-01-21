@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 using System.Data.SqlClient;
 using System.Configuration;
 
@@ -32,7 +33,11 @@ namespace Vuz_Shedule
                         {
                             while (reader.Read())
                             {
-                                FacultyComboBox.Items.Add(reader["nazvanie_instituta"].ToString());
+                                ComboBoxItem item = new ComboBoxItem
+                                {
+                                    Content = reader["nazvanie_instituta"].ToString()
+                                };
+                                FacultyComboBox.Items.Add(item);
                             }
                         }
                     }
@@ -48,11 +53,15 @@ namespace Vuz_Shedule
         {
             for (int i = 1; i <= 6; i++)
             {
-                CourseComboBox.Items.Add(i);
+                ComboBoxItem item = new ComboBoxItem
+                {
+                    Content = i
+                };
+                CourseComboBox.Items.Add(item);
             }
         }
 
-        private void FacultyComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void FacultyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (FacultyComboBox.SelectedItem != null && CourseComboBox.SelectedItem != null)
             {
@@ -60,7 +69,7 @@ namespace Vuz_Shedule
             }
         }
 
-        private void CourseComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void CourseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (FacultyComboBox.SelectedItem != null && CourseComboBox.SelectedItem != null)
             {
@@ -77,22 +86,27 @@ namespace Vuz_Shedule
                 {
                     connection.Open();
                     string query = @"
-                        SELECT g.nazvanie_gruppy 
+                        SELECT DISTINCT g.nazvanie_gruppy 
                         FROM RV_Gruppa g
                         JOIN RV_Fakultet f ON g.id_fakultet = f.id_fakultet
                         WHERE f.nazvanie_instituta = @Faculty 
-                        AND g.nomer_kursa = @Course";
+                        AND g.nomer_kursa = @Course
+                        ORDER BY g.nazvanie_gruppy";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@Faculty", FacultyComboBox.SelectedItem.ToString());
-                        command.Parameters.AddWithValue("@Course", CourseComboBox.SelectedItem);
+                        command.Parameters.AddWithValue("@Faculty", (FacultyComboBox.SelectedItem as ComboBoxItem).Content.ToString());
+                        command.Parameters.AddWithValue("@Course", (CourseComboBox.SelectedItem as ComboBoxItem).Content);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                GroupComboBox.Items.Add(reader["nazvanie_gruppy"].ToString());
+                                ComboBoxItem item = new ComboBoxItem
+                                {
+                                    Content = reader["nazvanie_gruppy"].ToString()
+                                };
+                                GroupComboBox.Items.Add(item);
                             }
                         }
                     }
@@ -134,7 +148,7 @@ namespace Vuz_Shedule
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@GroupName", GroupComboBox.SelectedItem.ToString());
+                        command.Parameters.AddWithValue("@GroupName", (GroupComboBox.SelectedItem as ComboBoxItem).Content.ToString());
                         
                         SqlDataAdapter adapter = new SqlDataAdapter(command);
                         DataTable dataTable = new DataTable();
