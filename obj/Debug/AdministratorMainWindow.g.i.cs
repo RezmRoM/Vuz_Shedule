@@ -29,7 +29,6 @@ using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Shell;
-using Vuz_Shedule;
 
 
 namespace Vuz_Shedule {
@@ -41,7 +40,7 @@ namespace Vuz_Shedule {
     public partial class AdministratorMainWindow : System.Windows.Window, System.Windows.Markup.IComponentConnector {
         
         
-        #line 25 "..\..\AdministratorMainWindow.xaml"
+        #line 53 "..\..\AdministratorMainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.ComboBox SubjectComboBox;
         
@@ -49,7 +48,7 @@ namespace Vuz_Shedule {
         #line hidden
         
         
-        #line 30 "..\..\AdministratorMainWindow.xaml"
+        #line 57 "..\..\AdministratorMainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.ComboBox TeacherComboBox;
         
@@ -57,7 +56,7 @@ namespace Vuz_Shedule {
         #line hidden
         
         
-        #line 35 "..\..\AdministratorMainWindow.xaml"
+        #line 61 "..\..\AdministratorMainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.ComboBox ClassroomComboBox;
         
@@ -65,7 +64,7 @@ namespace Vuz_Shedule {
         #line hidden
         
         
-        #line 40 "..\..\AdministratorMainWindow.xaml"
+        #line 65 "..\..\AdministratorMainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.ComboBox DayComboBox;
         
@@ -73,7 +72,7 @@ namespace Vuz_Shedule {
         #line hidden
         
         
-        #line 45 "..\..\AdministratorMainWindow.xaml"
+        #line 69 "..\..\AdministratorMainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.TextBox LessonNumberTextBox;
         
@@ -81,7 +80,7 @@ namespace Vuz_Shedule {
         #line hidden
         
         
-        #line 50 "..\..\AdministratorMainWindow.xaml"
+        #line 73 "..\..\AdministratorMainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.ComboBox LessonTypeComboBox;
         
@@ -89,7 +88,7 @@ namespace Vuz_Shedule {
         #line hidden
         
         
-        #line 55 "..\..\AdministratorMainWindow.xaml"
+        #line 77 "..\..\AdministratorMainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.ComboBox WeekParityComboBox;
         
@@ -97,15 +96,7 @@ namespace Vuz_Shedule {
         #line hidden
         
         
-        #line 63 "..\..\AdministratorMainWindow.xaml"
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        internal System.Windows.Controls.ComboBox GroupCompositionComboBox;
-        
-        #line default
-        #line hidden
-        
-        
-        #line 90 "..\..\AdministratorMainWindow.xaml"
+        #line 111 "..\..\AdministratorMainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.DataGrid ScheduleDataGrid;
         
@@ -164,52 +155,43 @@ namespace Vuz_Shedule {
             this.WeekParityComboBox = ((System.Windows.Controls.ComboBox)(target));
             return;
             case 8:
-            this.GroupCompositionComboBox = ((System.Windows.Controls.ComboBox)(target));
-            return;
-            case 9:
             
-            #line 73 "..\..\AdministratorMainWindow.xaml"
+            #line 86 "..\..\AdministratorMainWindow.xaml"
             ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.SaveButton_Click);
             
             #line default
             #line hidden
             return;
-            case 10:
+            case 9:
             this.ScheduleDataGrid = ((System.Windows.Controls.DataGrid)(target));
+            return;
+            case 10:
             
-            #line 97 "..\..\AdministratorMainWindow.xaml"
-            this.ScheduleDataGrid.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler(this.ScheduleDataGrid_SelectionChanged);
+            #line 135 "..\..\AdministratorMainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddButton_Click);
             
             #line default
             #line hidden
             return;
             case 11:
             
-            #line 119 "..\..\AdministratorMainWindow.xaml"
-            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddButton_Click);
+            #line 141 "..\..\AdministratorMainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.EditButton_Click);
             
             #line default
             #line hidden
             return;
             case 12:
             
-            #line 126 "..\..\AdministratorMainWindow.xaml"
-            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.EditButton_Click);
+            #line 147 "..\..\AdministratorMainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteButton_Click);
             
             #line default
             #line hidden
             return;
             case 13:
             
-            #line 133 "..\..\AdministratorMainWindow.xaml"
-            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.DeleteButton_Click);
-            
-            #line default
-            #line hidden
-            return;
-            case 14:
-            
-            #line 140 "..\..\AdministratorMainWindow.xaml"
+            #line 153 "..\..\AdministratorMainWindow.xaml"
             ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.RefreshButton_Click);
             
             #line default

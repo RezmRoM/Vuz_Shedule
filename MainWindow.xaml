@@ -5,66 +5,233 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vuz_Shedule"
         mc:Ignorable="d"
-        Title="Меню Выбора роли" Height="450" Width="800"
+        Title="Выбор роли" 
+        WindowState="Maximized"
+        MinWidth="1280"
+        MinHeight="720"
+        FontFamily="Bookman Old Style"
         WindowStartupLocation="CenterScreen">
-    <Grid>
-        <!-- Define rows for layout -->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <!-- For images -->
-            <RowDefinition Height="Auto" />
-            <!-- For buttons -->
-        </Grid.RowDefinitions>
 
-        <!-- Define columns for layout -->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <Window.Resources>
+        <!-- Ресурс для тени текста -->
+        <DropShadowEffect x:Key="TitleShadowEffect"
+                          Color="#8B4513"
+                          BlurRadius="10"
+                          ShadowDepth="3"
+                          Opacity="0.3"/>
 
-        <!-- Images Section -->
-        <Image Source="teacher.jpg" 
-               Grid.Row="0" Grid.Column="0" 
-               HorizontalAlignment="Center" 
-               VerticalAlignment="Center" 
-               Width="150" Height="150" 
-               Margin="10"/>
+        <!-- Стиль для кнопок -->
+        <Style x:Key="RoleButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F8F3E6"/>
+            <Setter Property="Foreground" Value="#5C3317"/>
+            <Setter Property="BorderBrush" Value="#8B4513"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter x:Name="contentPresenter"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                            <Border.Effect>
+                                <DropShadowEffect Color="#8B4513" Opacity="0.3" BlurRadius="5" ShadowDepth="2"/>
+                            </Border.Effect>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FFF8F0"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#5C3317"/>
+                                <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="#8B4513"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#D2B48C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-        <Image Source="student.jpg" 
-               Grid.Row="0" Grid.Column="1" 
-               HorizontalAlignment="Center" 
-               VerticalAlignment="Center" 
-               Width="150" Height="150" 
-               Margin="10"/>
+    <Window.Background>
+        <ImageBrush ImageSource="https://i.postimg.cc/9QmW3vJC/image-50.png" Stretch="UniformToFill" Opacity="0.95"/>
+    </Window.Background>
 
-        <Image Source="administrator.jpg" 
-               Grid.Row="0" Grid.Column="2" 
-               HorizontalAlignment="Center" 
-               VerticalAlignment="Center" 
-               Width="150" Height="150" 
-               Margin="10"/>
+    <Border Margin="40" CornerRadius="20" Background="#F8F3E6" 
+            BorderBrush="#8B4513" BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" Color="#8B4513" Opacity="0.2"/>
+        </Border.Effect>
 
-        <!-- Buttons Section -->
-        <Button Content="Преподаватель" 
-                Width="120" Height="50" 
-                Margin="10" 
-                Background="#FFDEC44D"
-                Grid.Row="1" Grid.Column="0"
-                Click="TeacherButton_Click"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Button Content="Студент" 
-                Width="120" Height="50" 
-                Margin="10" 
-                Background="#FFDEC44D"
-                Grid.Row="1" Grid.Column="1"
-                Click="StudentButton_Click"/>
+            <!-- Header -->
+            <TextBlock Text="Выберите вашу роль" 
+                       Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       FontSize="32"
+                       FontWeight="Bold"
+                       Foreground="#5C3317"
+                       Margin="0,40">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="#8B4513" BlurRadius="10" ShadowDepth="3" Opacity="0.3"/>
+                </TextBlock.Effect>
+            </TextBlock>
 
-        <Button Content="Администратор" 
-                Width="120" Height="50" 
-                Margin="10" 
-                Background="#FFDEC44D"
-                Grid.Row="1" Grid.Column="2"
-                Click="AdminButton_Click"/>
-    </Grid>
+            <!-- Cards Container -->
+            <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Преподаватель -->
+                <Border Width="280" Height="380" 
+                        Margin="20" 
+                        Background="White"
+                        CornerRadius="15"
+                        BorderBrush="#8B4513"
+                        BorderThickness="1.5">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="15" Color="#8B4513" Opacity="0.2"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Image Section -->
+                        <Border Grid.Row="0" 
+                                CornerRadius="15,15,0,0"
+                                Background="White"
+                                Margin="10">
+                            <Image Source="teacher.jpg" 
+                                   Stretch="UniformToFill"
+                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                <Image.Clip>
+                                    <RectangleGeometry Rect="0,0,280,280" RadiusX="15" RadiusY="15"/>
+                                </Image.Clip>
+                            </Image>
+                        </Border>
+
+                        <!-- Button Section -->
+                        <Button Grid.Row="1"
+                                Content="Преподаватель" 
+                                Style="{StaticResource RoleButtonStyle}"
+                                Margin="0,0,0,20"
+                                HorizontalAlignment="Center"
+                                Click="TeacherButton_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Студент -->
+                <Border Width="280" Height="380" 
+                        Margin="20" 
+                        Background="White"
+                        CornerRadius="15"
+                        BorderBrush="#8B4513"
+                        BorderThickness="1.5"
+                        Grid.Column="1">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="15" Color="#8B4513" Opacity="0.2"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Image Section -->
+                        <Border Grid.Row="0" 
+                                CornerRadius="15,15,0,0"
+                                Background="White"
+                                Margin="10">
+                            <Image Source="student.jpg" 
+                                   Stretch="UniformToFill"
+                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                <Image.Clip>
+                                    <RectangleGeometry Rect="0,0,280,280" RadiusX="15" RadiusY="15"/>
+                                </Image.Clip>
+                            </Image>
+                        </Border>
+
+                        <!-- Button Section -->
+                        <Button Grid.Row="1"
+                                Content="Студент" 
+                                Style="{StaticResource RoleButtonStyle}"
+                                Margin="0,0,0,20"
+                                HorizontalAlignment="Center"
+                                Click="StudentButton_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Администратор -->
+                <Border Width="280" Height="380" 
+                        Margin="20" 
+                        Background="White"
+                        CornerRadius="15"
+                        BorderBrush="#8B4513"
+                        BorderThickness="1.5"
+                        Grid.Column="2">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="15" Color="#8B4513" Opacity="0.2"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Image Section -->
+                        <Border Grid.Row="0" 
+                                CornerRadius="15,15,0,0"
+                                Background="White"
+                                Margin="10">
+                            <Image Source="administrator.jpg" 
+                                   Stretch="UniformToFill"
+                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                <Image.Clip>
+                                    <RectangleGeometry Rect="0,0,280,280" RadiusX="15" RadiusY="15"/>
+                                </Image.Clip>
+                            </Image>
+                        </Border>
+
+                        <!-- Button Section -->
+                        <Button Grid.Row="1"
+                                Content="Администратор" 
+                                Style="{StaticResource RoleButtonStyle}"
+                                Margin="0,0,0,20"
+                                HorizontalAlignment="Center"
+                                Click="AdminButton_Click"/>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Footer -->
+            <TextBlock Grid.Row="2" 
+                       Text="© Университетское расписание 2024"
+                       HorizontalAlignment="Center"
+                       FontSize="14"
+                       Foreground="#8B4513"
+                       Margin="0,20"/>
+        </Grid>
+    </Border>
 </Window>

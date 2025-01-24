@@ -5,140 +5,102 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vuz_Shedule"
         mc:Ignorable="d"
-        Title="Расписание занятий" Height="700" Width="1200"
+        Title="Расписание занятий" 
+        WindowState="Maximized"
+        MinWidth="1280"
+        MinHeight="720"
+        FontFamily="Bookman Old Style"
         WindowStartupLocation="CenterScreen">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <!-- Верхняя панель -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+    <Window.Resources>
+        <Style x:Key="FilterComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="#FFF8F0"/>
+            <Setter Property="BorderBrush" Value="#8B4513"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Window.Resources>
 
-            <!-- Кнопка "Назад" -->
+    <Window.Background>
+        <ImageBrush ImageSource="https://i.postimg.cc/9QmW3vJC/image-50.png" Stretch="UniformToFill" Opacity="0.95"/>
+    </Window.Background>
+
+    <Border Margin="40" CornerRadius="20" Background="#F8F3E6" 
+            BorderBrush="#8B4513" BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" Color="#8B4513" Opacity="0.2"/>
+        </Border.Effect>
+
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
             <Button x:Name="BackButton"
-                    Width="40" 
-                    Height="40"
-                    Background="White"
-                    BorderBrush="#E0E0E0"
-                    BorderThickness="1"
-                    Click="BackButton_Click"
-                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Ellipse Fill="{TemplateBinding Background}"
-                                    Stroke="{TemplateBinding BorderBrush}"
-                                    StrokeThickness="{TemplateBinding BorderThickness}"/>
-                            <ContentPresenter HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Button.Template>
-                <TextBlock Text="&lt;"
-                          FontSize="20"
-                          Foreground="Black"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"/>
+                    Style="{StaticResource RoleButtonStyle}"
+                    Width="60"
+                    Height="60"
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Left"
+                    Click="BackButton_Click">
+                <TextBlock Text="←" FontSize="24" Foreground="#5C3317"/>
             </Button>
 
-            <!-- Заголовок -->
-            <TextBlock Grid.Column="1"
-                       Text="Расписание занятий"
-                       FontSize="24"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
-        </Grid>
-
-        <!-- Панель фильтров -->
-        <StackPanel Grid.Row="1" 
-                    Orientation="Vertical" 
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,20">
-            
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Center"
-                        Margin="0,0,0,20">
-                <StackPanel Margin="10,0">
-                    <Label Content="Факультет:"
-                           FontSize="14"
-                           Margin="0,0,0,5"/>
+            <!-- Filters -->
+            <Border Grid.Row="1"
+                    CornerRadius="10"
+                    Background="#FFF8F0"
+                    BorderBrush="#8B4513"
+                    BorderThickness="1.5"
+                    Margin="0,0,0,20"
+                    Padding="15">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <ComboBox x:Name="FacultyComboBox"
-                              Width="300"
-                              Height="30"
-                              SelectionChanged="FacultyComboBox_SelectionChanged"/>
-                </StackPanel>
+                              Style="{StaticResource FilterComboBoxStyle}"
+                              Width="250"/>
 
-                <StackPanel Margin="10,0">
-                    <Label Content="Курс:"
-                           FontSize="14"
-                           Margin="0,0,0,5"/>
                     <ComboBox x:Name="CourseComboBox"
-                              Width="100"
-                              Height="30"
-                              SelectionChanged="CourseComboBox_SelectionChanged"/>
-                </StackPanel>
+                              Style="{StaticResource FilterComboBoxStyle}"
+                              Width="120"/>
 
-                <StackPanel Margin="10,0">
-                    <Label Content="Группа:"
-                           FontSize="14"
-                           Margin="0,0,0,5"/>
                     <ComboBox x:Name="GroupComboBox"
-                          Width="150"
-                          Height="30"
-                          SelectionChanged="GroupComboBox_SelectionChanged"/>
-                </StackPanel>
+                              Style="{StaticResource FilterComboBoxStyle}"
+                              Width="180"/>
 
-                <StackPanel Margin="10,0" VerticalAlignment="Bottom">
-                    <Button Content="Показать расписание"
-                            Height="30"
+                    <Button Content="Показать"
+                            Style="{StaticResource RoleButtonStyle}"
                             Width="150"
-                            Background="#FFF2CC"
+                            Margin="10"
                             Click="ShowScheduleButton_Click"/>
                 </StackPanel>
-            </StackPanel>
-        </StackPanel>
+            </Border>
 
-        <!-- Таблица расписания -->
-        <DataGrid x:Name="ScheduleDataGrid"
-                  Grid.Row="2"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  GridLinesVisibility="All"
-                  AlternatingRowBackground="#FFF8F8F8"
-                  BorderBrush="#E0E0E0"
-                  BorderThickness="1"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  HeadersVisibility="Column"
-                  RowHeaderWidth="0">
-            <DataGrid.Resources>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="#F5F5F5"/>
-                    <Setter Property="Padding" Value="10"/>
-                    <Setter Property="BorderBrush" Value="#E0E0E0"/>
-                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
-                </Style>
-            </DataGrid.Resources>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="День недели" Binding="{Binding [День недели]}" Width="*"/>
-                <DataGridTextColumn Header="Номер пары" Binding="{Binding [Номер пары]}" Width="100"/>
-                <DataGridTextColumn Header="Предмет" Binding="{Binding [Предмет]}" Width="*"/>
-                <DataGridTextColumn Header="Тип занятия" Binding="{Binding [Тип занятия]}" Width="120"/>
-                <DataGridTextColumn Header="Преподаватель" Binding="{Binding [Преподаватель]}" Width="*"/>
-                <DataGridTextColumn Header="Аудитория" Binding="{Binding [Аудитория]}" Width="100"/>
-                <DataGridTextColumn Header="Четность недели" Binding="{Binding [Четность недели]}" Width="120"/>
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
-</Window> 
+            <!-- Schedule Table -->
+            <Border Grid.Row="2"
+                    CornerRadius="10"
+                    Background="White"
+                    BorderBrush="#8B4513"
+                    BorderThickness="1.5"
+                    Padding="10">
+                <DataGrid x:Name="ScheduleDataGrid"
+                          Style="{StaticResource ModernDataGridStyle}"
+                          AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="День недели" Binding="{Binding [День недели]}" Width="*"/>
+                        <DataGridTextColumn Header="Номер пары" Binding="{Binding [Номер пары]}" Width="100"/>
+                        <DataGridTextColumn Header="Предмет" Binding="{Binding [Предмет]}" Width="*"/>
+                        <DataGridTextColumn Header="Тип занятия" Binding="{Binding [Тип занятия]}" Width="120"/>
+                        <DataGridTextColumn Header="Преподаватель" Binding="{Binding [Преподаватель]}" Width="*"/>
+                        <DataGridTextColumn Header="Аудитория" Binding="{Binding [Аудитория]}" Width="100"/>
+                        <DataGridTextColumn Header="Четность недели" Binding="{Binding [Четность недели]}" Width="120"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
