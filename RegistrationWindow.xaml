@@ -12,13 +12,20 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Background>
-        <ImageBrush ImageSource="https://i.postimg.cc/9QmW3vJC/image-50.png" Stretch="UniformToFill" Opacity="0.95"/>
+        <ImageBrush ImageSource="https://i.postimg.cc/9QmW3vJC/image-50.png" 
+                    Stretch="UniformToFill" 
+                    Opacity="0.95"/>
     </Window.Background>
 
-    <Border Margin="40" CornerRadius="20" Background="{StaticResource BackgroundColor}" 
-            BorderBrush="{StaticResource SecondaryColor}" BorderThickness="2">
+    <Border Margin="40" 
+            CornerRadius="20" 
+            Background="{StaticResource BackgroundColor}" 
+            BorderBrush="{StaticResource SecondaryColor}" 
+            BorderThickness="2">
         <Border.Effect>
-            <DropShadowEffect BlurRadius="20" Color="{StaticResource SecondaryColor}" Opacity="0.2"/>
+            <DropShadowEffect BlurRadius="20" 
+                            Color="{StaticResource SecondaryColorValue}" 
+                            Opacity="0.2"/>
         </Border.Effect>
 
         <Grid>
@@ -36,7 +43,9 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Click="BackButton_Click">
-                <TextBlock Text="←" FontSize="24" Foreground="{StaticResource PrimaryColor}"/>
+                <TextBlock Text="←" 
+                          FontSize="24" 
+                          Foreground="{StaticResource PrimaryColor}"/>
             </Button>
 
             <!-- Registration Content -->
@@ -50,7 +59,9 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" Color="{StaticResource SecondaryColor}" Opacity="0.2"/>
+                        <DropShadowEffect BlurRadius="15" 
+                                        Color="{StaticResource SecondaryColorValue}" 
+                                        Opacity="0.2"/>
                     </Border.Effect>
 
                     <StackPanel Margin="30" VerticalAlignment="Center">

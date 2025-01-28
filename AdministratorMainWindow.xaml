@@ -24,7 +24,7 @@
             BorderThickness="2">
         <Border.Effect>
             <DropShadowEffect BlurRadius="20" 
-                            Color="{StaticResource SecondaryColor}" 
+                            Color="{StaticResource SecondaryColorValue}" 
                             Opacity="0.2"/>
         </Border.Effect>
 
@@ -79,6 +79,13 @@
                               Margin="0,0,0,20">
                         <ComboBoxItem Content="Числитель"/>
                         <ComboBoxItem Content="Знаменатель"/>
+                    </ComboBox>
+
+                    <ComboBox x:Name="GroupCompositionComboBox"
+                              Style="{StaticResource FilterComboBoxStyle}"
+                              Margin="0,0,0,20">
+                        <ComboBoxItem Content="Полная группа"/>
+                        <ComboBoxItem Content="Подгруппа"/>
                     </ComboBox>
 
                     <Button Content="Сохранить"

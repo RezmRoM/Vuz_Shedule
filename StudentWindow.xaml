@@ -27,10 +27,14 @@
         <ImageBrush ImageSource="https://i.postimg.cc/9QmW3vJC/image-50.png" Stretch="UniformToFill" Opacity="0.95"/>
     </Window.Background>
 
-    <Border Margin="40" CornerRadius="20" Background="#F8F3E6" 
-            BorderBrush="#8B4513" BorderThickness="2">
+    <Border Margin="40" CornerRadius="20" 
+            Background="{StaticResource BackgroundColor}" 
+            BorderBrush="{StaticResource SecondaryColor}" 
+            BorderThickness="2">
         <Border.Effect>
-            <DropShadowEffect BlurRadius="20" Color="#8B4513" Opacity="0.2"/>
+            <DropShadowEffect BlurRadius="20" 
+                            Color="{StaticResource SecondaryColorValue}" 
+                            Opacity="0.2"/>
         </Border.Effect>
 
         <Grid Margin="20">
@@ -48,14 +52,14 @@
                     Margin="0,0,0,20"
                     HorizontalAlignment="Left"
                     Click="BackButton_Click">
-                <TextBlock Text="←" FontSize="24" Foreground="#5C3317"/>
+                <TextBlock Text="←" FontSize="24" Foreground="{StaticResource PrimaryColor}"/>
             </Button>
 
             <!-- Filters -->
             <Border Grid.Row="1"
                     CornerRadius="10"
-                    Background="#FFF8F0"
-                    BorderBrush="#8B4513"
+                    Background="{StaticResource LightBackgroundColor}"
+                    BorderBrush="{StaticResource SecondaryColor}"
                     BorderThickness="1.5"
                     Margin="0,0,0,20"
                     Padding="15">
@@ -84,7 +88,7 @@
             <Border Grid.Row="2"
                     CornerRadius="10"
                     Background="White"
-                    BorderBrush="#8B4513"
+                    BorderBrush="{StaticResource SecondaryColor}"
                     BorderThickness="1.5"
                     Padding="10">
                 <DataGrid x:Name="ScheduleDataGrid"

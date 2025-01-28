@@ -21,8 +21,12 @@
             CornerRadius="20" 
             Background="{StaticResource BackgroundColor}" 
             BorderBrush="{StaticResource SecondaryColor}" 
-            BorderThickness="2"
-            Effect="{StaticResource MaterialDesignElevationShadow2}">
+            BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" 
+                            Color="{StaticResource SecondaryColorValue}" 
+                            Opacity="0.2"/>
+        </Border.Effect>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -53,6 +57,11 @@
                     Margin="20"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" 
+                                    Color="{StaticResource SecondaryColorValue}" 
+                                    Opacity="0.2"/>
+                </Border.Effect>
 
                 <StackPanel Margin="30" VerticalAlignment="Center">
                     <TextBlock Text="Авторизация"

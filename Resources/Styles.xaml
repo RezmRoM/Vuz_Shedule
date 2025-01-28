@@ -2,13 +2,19 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Vuz_Shedule">
 
-    <!-- Öâåòà -->
-    <SolidColorBrush x:Key="PrimaryColor" Color="#5C3317"/>
-    <SolidColorBrush x:Key="SecondaryColor" Color="#8B4513"/>
-    <SolidColorBrush x:Key="BackgroundColor" Color="#F8F3E6"/>
-    <SolidColorBrush x:Key="LightBackgroundColor" Color="#FFF8F0"/>
+    <!-- Ð¦Ð²ÐµÑ‚Ð° -->
+    <Color x:Key="PrimaryColorValue">#5C3317</Color>
+    <Color x:Key="SecondaryColorValue">#8B4513</Color>
+    <Color x:Key="BackgroundColorValue">#F8F3E6</Color>
+    <Color x:Key="LightBackgroundColorValue">#FFF8F0</Color>
 
-    <!-- Ñòèëü êíîïîê -->
+    <!-- ÐšÐ¸ÑÑ‚Ð¸ -->
+    <SolidColorBrush x:Key="PrimaryColor" Color="{StaticResource PrimaryColorValue}"/>
+    <SolidColorBrush x:Key="SecondaryColor" Color="{StaticResource SecondaryColorValue}"/>
+    <SolidColorBrush x:Key="BackgroundColor" Color="{StaticResource BackgroundColorValue}"/>
+    <SolidColorBrush x:Key="LightBackgroundColor" Color="{StaticResource LightBackgroundColorValue}"/>
+
+    <!-- Ð¡Ñ‚Ð¸Ð»ÑŒ ÐºÐ½Ð¾Ð¿ÐºÐ¸ -->
     <Style x:Key="RoleButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource LightBackgroundColor}"/>
         <Setter Property="Foreground" Value="{StaticResource PrimaryColor}"/>
@@ -33,7 +39,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"/>
                         <Border.Effect>
-                            <DropShadowEffect Color="{StaticResource SecondaryColor.Color}" 
+                            <DropShadowEffect Color="{StaticResource SecondaryColorValue}" 
                                             Opacity="0.3" 
                                             BlurRadius="5" 
                                             ShadowDepth="2"/>
@@ -53,17 +59,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="AuthPasswordBoxStyle" TargetType="PasswordBox">
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Padding" Value="10"/>
-        <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Background" Value="{StaticResource LightBackgroundColor}"/>
-        <Setter Property="Margin" Value="0,5,0,15"/>
-    </Style>
-
-    <!-- Ñòèëü äëÿ ComboBox -->
+    <!-- Ð¡Ñ‚Ð¸Ð»ÑŒ Ð´Ð»Ñ ComboBox -->
     <Style x:Key="FilterComboBoxStyle" TargetType="ComboBox">
         <Setter Property="Height" Value="35"/>
         <Setter Property="FontSize" Value="14"/>
@@ -81,7 +77,7 @@
         </Setter>
     </Style>
 
-    <!-- Ñòèëü òåêñòîâûõ ïîëåé -->
+    <!-- Ð¡Ñ‚Ð¸Ð»ÑŒ Ñ‚ÐµÐºÑÑ‚Ð¾Ð²Ð¾Ð³Ð¾ Ð¿Ð¾Ð»Ñ -->
     <Style x:Key="AuthTextBoxStyle" TargetType="TextBox">
         <Setter Property="Height" Value="40"/>
         <Setter Property="FontSize" Value="14"/>
@@ -93,7 +89,7 @@
         <Setter Property="Margin" Value="0,5,0,15"/>
     </Style>
 
-    <!-- Ñòèëü äëÿ PasswordBox -->
+    <!-- Ð¡Ñ‚Ð¸Ð»ÑŒ Ð´Ð»Ñ PasswordBox -->
     <Style x:Key="AuthPasswordBoxStyle" TargetType="PasswordBox">
         <Setter Property="Height" Value="40"/>
         <Setter Property="FontSize" Value="14"/>
@@ -104,7 +100,7 @@
         <Setter Property="Margin" Value="0,5,0,15"/>
     </Style>
 
-    <!-- Ñòèëü DataGrid -->
+    <!-- Ð¡Ñ‚Ð¸Ð»ÑŒ DataGrid -->
     <Style x:Key="ModernDataGridStyle" TargetType="DataGrid">
         <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}"/>
@@ -130,11 +126,11 @@
         </Setter>
     </Style>
 
-    <!-- Ýôôåêò òåíè -->
+    <!-- Ð­Ñ„Ñ„ÐµÐºÑ‚ Ñ‚ÐµÐ½Ð¸ -->
     <DropShadowEffect x:Key="MaterialDesignElevationShadow2" 
                      BlurRadius="8" 
                      ShadowDepth="3" 
-                     Color="{StaticResource PrimaryColor.Color}" 
+                     Color="{StaticResource PrimaryColorValue}" 
                      Opacity="0.2"/>
 
 </ResourceDictionary>

@@ -15,16 +15,16 @@
     <Window.Resources>
         <!-- Ресурс для тени текста -->
         <DropShadowEffect x:Key="TitleShadowEffect"
-                          Color="#8B4513"
+                          Color="{StaticResource SecondaryColorValue}"
                           BlurRadius="10"
                           ShadowDepth="3"
                           Opacity="0.3"/>
 
         <!-- Стиль для кнопок -->
-        <Style x:Key="RoleButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#F8F3E6"/>
-            <Setter Property="Foreground" Value="#5C3317"/>
-            <Setter Property="BorderBrush" Value="#8B4513"/>
+        <Style x:Key="LocalRoleButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource BackgroundColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}"/>
             <Setter Property="BorderThickness" Value="1.5"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -45,14 +45,17 @@
                                               HorizontalAlignment="Center"
                                               VerticalAlignment="Center"/>
                             <Border.Effect>
-                                <DropShadowEffect Color="#8B4513" Opacity="0.3" BlurRadius="5" ShadowDepth="2"/>
+                                <DropShadowEffect Color="{StaticResource SecondaryColorValue}" 
+                                                Opacity="0.3" 
+                                                BlurRadius="5" 
+                                                ShadowDepth="2"/>
                             </Border.Effect>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#FFF8F0"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#5C3317"/>
-                                <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="#8B4513"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource LightBackgroundColor}"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
+                                <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource SecondaryColor}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#D2B48C"/>
@@ -68,10 +71,12 @@
         <ImageBrush ImageSource="https://i.postimg.cc/9QmW3vJC/image-50.png" Stretch="UniformToFill" Opacity="0.95"/>
     </Window.Background>
 
-    <Border Margin="40" CornerRadius="20" Background="#F8F3E6" 
-            BorderBrush="#8B4513" BorderThickness="2">
+    <Border Margin="40" CornerRadius="20" Background="{StaticResource BackgroundColor}" 
+            BorderBrush="{StaticResource SecondaryColor}" BorderThickness="2">
         <Border.Effect>
-            <DropShadowEffect BlurRadius="20" Color="#8B4513" Opacity="0.2"/>
+            <DropShadowEffect BlurRadius="20" 
+                            Color="{StaticResource SecondaryColorValue}" 
+                            Opacity="0.2"/>
         </Border.Effect>
 
         <Grid>
@@ -87,10 +92,13 @@
                        HorizontalAlignment="Center"
                        FontSize="32"
                        FontWeight="Bold"
-                       Foreground="#5C3317"
+                       Foreground="{StaticResource PrimaryColor}"
                        Margin="0,40">
                 <TextBlock.Effect>
-                    <DropShadowEffect Color="#8B4513" BlurRadius="10" ShadowDepth="3" Opacity="0.3"/>
+                    <DropShadowEffect Color="{StaticResource SecondaryColorValue}" 
+                                    BlurRadius="10" 
+                                    ShadowDepth="3" 
+                                    Opacity="0.3"/>
                 </TextBlock.Effect>
             </TextBlock>
 
@@ -107,10 +115,12 @@
                         Margin="20" 
                         Background="White"
                         CornerRadius="15"
-                        BorderBrush="#8B4513"
+                        BorderBrush="{StaticResource SecondaryColor}"
                         BorderThickness="1.5">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" Color="#8B4513" Opacity="0.2"/>
+                        <DropShadowEffect BlurRadius="15" 
+                                        Color="{StaticResource SecondaryColorValue}" 
+                                        Opacity="0.2"/>
                     </Border.Effect>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -135,7 +145,7 @@
                         <!-- Button Section -->
                         <Button Grid.Row="1"
                                 Content="Преподаватель" 
-                                Style="{StaticResource RoleButtonStyle}"
+                                Style="{StaticResource LocalRoleButtonStyle}"
                                 Margin="0,0,0,20"
                                 HorizontalAlignment="Center"
                                 Click="TeacherButton_Click"/>
@@ -147,11 +157,13 @@
                         Margin="20" 
                         Background="White"
                         CornerRadius="15"
-                        BorderBrush="#8B4513"
+                        BorderBrush="{StaticResource SecondaryColor}"
                         BorderThickness="1.5"
                         Grid.Column="1">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" Color="#8B4513" Opacity="0.2"/>
+                        <DropShadowEffect BlurRadius="15" 
+                                        Color="{StaticResource SecondaryColorValue}" 
+                                        Opacity="0.2"/>
                     </Border.Effect>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -176,7 +188,7 @@
                         <!-- Button Section -->
                         <Button Grid.Row="1"
                                 Content="Студент" 
-                                Style="{StaticResource RoleButtonStyle}"
+                                Style="{StaticResource LocalRoleButtonStyle}"
                                 Margin="0,0,0,20"
                                 HorizontalAlignment="Center"
                                 Click="StudentButton_Click"/>
@@ -188,11 +200,13 @@
                         Margin="20" 
                         Background="White"
                         CornerRadius="15"
-                        BorderBrush="#8B4513"
+                        BorderBrush="{StaticResource SecondaryColor}"
                         BorderThickness="1.5"
                         Grid.Column="2">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" Color="#8B4513" Opacity="0.2"/>
+                        <DropShadowEffect BlurRadius="15" 
+                                        Color="{StaticResource SecondaryColorValue}" 
+                                        Opacity="0.2"/>
                     </Border.Effect>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -217,7 +231,7 @@
                         <!-- Button Section -->
                         <Button Grid.Row="1"
                                 Content="Администратор" 
-                                Style="{StaticResource RoleButtonStyle}"
+                                Style="{StaticResource LocalRoleButtonStyle}"
                                 Margin="0,0,0,20"
                                 HorizontalAlignment="Center"
                                 Click="AdminButton_Click"/>
@@ -230,7 +244,7 @@
                        Text="© Университетское расписание 2024"
                        HorizontalAlignment="Center"
                        FontSize="14"
-                       Foreground="#8B4513"
+                       Foreground="{StaticResource SecondaryColor}"
                        Margin="0,20"/>
         </Grid>
     </Border>
