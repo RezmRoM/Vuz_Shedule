@@ -29,18 +29,13 @@
         </Border.Effect>
 
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <!-- Header -->
+            <!-- Кнопка "Назад" в верхнем левом углу -->
             <Button x:Name="BackButton"
                     Style="{StaticResource RoleButtonStyle}"
                     Width="60"
                     Height="60"
-                    Margin="20"
-                    HorizontalAlignment="Left"
+                    Margin="20,10,0,0" 
+                HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Click="BackButton_Click">
                 <TextBlock Text="←" 
@@ -48,14 +43,15 @@
                           Foreground="{StaticResource PrimaryColor}"/>
             </Button>
 
-            <!-- Registration Content -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <!-- Контент регистрации (остается центрированным) -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          VerticalAlignment="Center">
+                <!-- Центрируем по вертикали -->
                 <Border CornerRadius="15"
                         Background="{StaticResource LightBackgroundColor}"
                         BorderBrush="{StaticResource SecondaryColor}"
                         BorderThickness="1.5"
                         Width="500"
-                        Margin="20"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center">
                     <Border.Effect>
@@ -72,26 +68,50 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,30"/>
 
+                        <TextBlock Text="Email"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,0,0,5"/>
                         <TextBox x:Name="EmailTextBox"
                                  Style="{StaticResource AuthTextBoxStyle}"
                                  Tag="Email"/>
 
+                        <TextBlock Text="Фамилия"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
                         <TextBox x:Name="LastNameTextBox"
                                  Style="{StaticResource AuthTextBoxStyle}"
                                  Tag="Фамилия"/>
 
+                        <TextBlock Text="Имя"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
                         <TextBox x:Name="FirstNameTextBox"
                                  Style="{StaticResource AuthTextBoxStyle}"
                                  Tag="Имя"/>
 
+                        <TextBlock Text="Отчество"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
                         <TextBox x:Name="MiddleNameTextBox"
                                  Style="{StaticResource AuthTextBoxStyle}"
                                  Tag="Отчество"/>
 
+                        <TextBlock Text="Пароль"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
                         <PasswordBox x:Name="PasswordBox"
                                      Style="{StaticResource AuthPasswordBoxStyle}"
                                      Tag="Пароль"/>
 
+                        <TextBlock Text="Подтверждение пароля"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
                         <PasswordBox x:Name="ConfirmPasswordBox"
                                      Style="{StaticResource AuthPasswordBoxStyle}"
                                      Tag="Подтверждение пароля"/>

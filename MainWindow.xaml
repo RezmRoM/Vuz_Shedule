@@ -241,7 +241,7 @@
 
             <!-- Footer -->
             <TextBlock Grid.Row="2" 
-                       Text="© Университетское расписание 2024"
+                       Text="© Университетское расписание 2025"
                        HorizontalAlignment="Center"
                        FontSize="14"
                        Foreground="{StaticResource SecondaryColor}"

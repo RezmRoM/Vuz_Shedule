@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Windows.Controls;
+using System.Collections.Generic;
 
 namespace Vuz_Shedule
 {
@@ -135,18 +136,42 @@ namespace Vuz_Shedule
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = @"SELECT * FROM RV_Raspisanie_Polnoe
-                                   ORDER BY 
-                                        CASE [День недели]
-                                            WHEN 'Понедельник' THEN 1
-                                            WHEN 'Вторник' THEN 2
-                                            WHEN 'Среда' THEN 3
-                                            WHEN 'Четверг' THEN 4
-                                            WHEN 'Пятница' THEN 5
-                                            WHEN 'Суббота' THEN 6
-                                            WHEN 'Воскресенье' THEN 7
-                                        END,
-                                        [Номер пары]";
+                    string query = @"SELECT 
+                                    z.id_zanyatia AS [ID],
+                                    g.nazvanie_gruppy AS [Группа],
+                                    dn.nazvanie AS [День недели],
+                                    z.nomer_pary AS [Номер пары],
+                                    p.nazvanie_predmeta AS [Предмет],
+                                    tz.nazvanie AS [Тип занятия],
+                                    CONCAT(pr.familia, ' ', pr.imya, ' ', pr.otchestvo) AS [Преподаватель],
+                                    a.nazvanie_auditorii AS [Аудитория],
+                                    CASE 
+                                        WHEN z.chetnost_nedeli = 1 THEN 'Числитель'
+                                        ELSE 'Знаменатель'
+                                    END AS [Четность недели],
+                                    CASE 
+                                        WHEN z.polnost_gruppy = 1 THEN 'Полная группа'
+                                        ELSE 'Подгруппа'
+                                    END AS [Состав группы]
+                                FROM RV_Raspisanie_Gruppy rg
+                                JOIN RV_Gruppa g ON rg.id_gruppy = g.id_gruppy
+                                JOIN RV_Zanyatie z ON rg.id_zanyatia = z.id_zanyatia
+                                JOIN RV_Den_Nedeli dn ON z.id_den_nedeli = dn.id_den_nedeli
+                                JOIN RV_Predmet p ON z.id_predmeta = p.id_predmeta
+                                JOIN RV_Tip_Zanyatia tz ON z.id_tip_zanyatia = tz.id_tip_zanyatia
+                                JOIN RV_Prepodavatel pr ON z.id_prepodavatelya = pr.id_prepodavatelya
+                                JOIN RV_Auditoria a ON z.id_auditorii = a.id_auditorii
+                                ORDER BY 
+                                    CASE dn.nazvanie
+                                        WHEN 'Понедельник' THEN 1
+                                        WHEN 'Вторник' THEN 2
+                                        WHEN 'Среда' THEN 3
+                                        WHEN 'Четверг' THEN 4
+                                        WHEN 'Пятница' THEN 5
+                                        WHEN 'Суббота' THEN 6
+                                        WHEN 'Воскресенье' THEN 7
+                                    END,
+                                    z.nomer_pary";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -163,6 +188,107 @@ namespace Vuz_Shedule
             }
         }
 
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!ValidateInput()) return;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Добавляем занятие
+                            string insertZanyatieQuery = @"
+                                INSERT INTO RV_Zanyatie 
+                                (id_predmeta, id_prepodavatelya, id_auditorii, id_den_nedeli, 
+                                 nomer_pary, chetnost_nedeli, polnost_gruppy, id_tip_zanyatia)
+                                OUTPUT INSERTED.id_zanyatia
+                                VALUES 
+                                (@SubjectId, @TeacherId, @ClassroomId, @DayId,
+                                 @LessonNumber, @WeekParity, @GroupComposition, @LessonTypeId)";
+
+                            int zanyatieId;
+                            using (SqlCommand command = new SqlCommand(insertZanyatieQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@SubjectId", (SubjectComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@TeacherId", (TeacherComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@ClassroomId", (ClassroomComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@DayId", (DayComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@LessonNumber", int.Parse(LessonNumberTextBox.Text));
+                                command.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@LessonTypeId", (LessonTypeComboBox.SelectedItem as ComboBoxItem)?.Tag);
+
+                                zanyatieId = (int)command.ExecuteScalar();
+                            }
+
+                            // Получаем список групп с соответствующими параметрами
+                            string selectGroupsQuery = @"
+                                SELECT id_gruppy 
+                                FROM RV_Gruppa 
+                                WHERE chetnost_nedeli = @WeekParity 
+                                AND polnost_gruppy = @GroupComposition";
+
+                            List<int> groupIds = new List<int>();
+                            using (SqlCommand command = new SqlCommand(selectGroupsQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
+
+                                using (SqlDataReader reader = command.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        groupIds.Add(reader.GetInt32(0));
+                                    }
+                                }
+                            }
+
+                            // Добавляем связи с группами
+                            string insertRaspisanieQuery = @"
+                                INSERT INTO RV_Raspisanie_Gruppy (id_gruppy, id_zanyatia)
+                                VALUES (@GroupId, @ZanyatieId)";
+
+                            foreach (int groupId in groupIds)
+                            {
+                                using (SqlCommand command = new SqlCommand(insertRaspisanieQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@GroupId", groupId);
+                                    command.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+
+                            transaction.Commit();
+                            MessageBox.Show("Занятие успешно добавлено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                            ClearForm();
+                            LoadSchedule();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw new Exception($"Ошибка при добавлении данных: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -172,34 +298,88 @@ namespace Vuz_Shedule
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = @"INSERT INTO RV_Zanyatie 
-                                   (id_predmeta, id_prepodavatelya, id_auditorii, id_den_nedeli, 
-                                    nomer_pary, chetnost_nedeli, polnost_gruppy, id_tip_zanyatia)
-                                   VALUES 
-                                   (@SubjectId, @TeacherId, @ClassroomId, @DayId,
-                                    @LessonNumber, @WeekParity, @GroupComposition, @LessonTypeId)";
-
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (SqlTransaction transaction = connection.BeginTransaction())
                     {
-                        command.Parameters.AddWithValue("@SubjectId", (SubjectComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                        command.Parameters.AddWithValue("@TeacherId", (TeacherComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                        command.Parameters.AddWithValue("@ClassroomId", (ClassroomComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                        command.Parameters.AddWithValue("@DayId", (DayComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                        command.Parameters.AddWithValue("@LessonNumber", int.Parse(LessonNumberTextBox.Text));
-                        command.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
-                        command.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
-                        command.Parameters.AddWithValue("@LessonTypeId", (LessonTypeComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                        try
+                        {
+                            // Добавляем занятие
+                            string insertZanyatieQuery = @"
+                                INSERT INTO RV_Zanyatie 
+                                (id_predmeta, id_prepodavatelya, id_auditorii, id_den_nedeli, 
+                                 nomer_pary, chetnost_nedeli, polnost_gruppy, id_tip_zanyatia)
+                                OUTPUT INSERTED.id_zanyatia
+                                VALUES 
+                                (@SubjectId, @TeacherId, @ClassroomId, @DayId,
+                                 @LessonNumber, @WeekParity, @GroupComposition, @LessonTypeId)";
 
-                        command.ExecuteNonQuery();
-                        MessageBox.Show("Занятие успешно добавлено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                        ClearForm();
-                        LoadSchedule();
+                            int zanyatieId;
+                            using (SqlCommand command = new SqlCommand(insertZanyatieQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@SubjectId", (SubjectComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@TeacherId", (TeacherComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@ClassroomId", (ClassroomComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@DayId", (DayComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@LessonNumber", int.Parse(LessonNumberTextBox.Text));
+                                command.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@LessonTypeId", (LessonTypeComboBox.SelectedItem as ComboBoxItem)?.Tag);
+
+                                zanyatieId = (int)command.ExecuteScalar();
+                            }
+
+                            // Получаем список групп с соответствующими параметрами
+                            string selectGroupsQuery = @"
+                                SELECT id_gruppy 
+                                FROM RV_Gruppa 
+                                WHERE chetnost_nedeli = @WeekParity 
+                                AND polnost_gruppy = @GroupComposition";
+
+                            List<int> groupIds = new List<int>();
+                            using (SqlCommand command = new SqlCommand(selectGroupsQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
+
+                                using (SqlDataReader reader = command.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        groupIds.Add(reader.GetInt32(0));
+                                    }
+                                }
+                            }
+
+                            // Добавляем связи с группами
+                            string insertRaspisanieQuery = @"
+                                INSERT INTO RV_Raspisanie_Gruppy (id_gruppy, id_zanyatia)
+                                VALUES (@GroupId, @ZanyatieId)";
+
+                            foreach (int groupId in groupIds)
+                            {
+                                using (SqlCommand command = new SqlCommand(insertRaspisanieQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@GroupId", groupId);
+                                    command.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+
+                            transaction.Commit();
+                            MessageBox.Show("Занятие успешно сохранено! Нажмите кнопку 'Обновить' для отображения изменений.",
+                                          "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                            ClearForm();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw new Exception($"Ошибка при сохранении данных: {ex.Message}");
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -242,11 +422,76 @@ namespace Vuz_Shedule
         private void ScheduleDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             _selectedRow = ScheduleDataGrid.SelectedItem as DataRowView;
-        }
+            if (_selectedRow != null)
+            {
+                // Заполняем поля формы данными из выбранной строки
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            ClearForm();
+                        // Заполняем ComboBox'ы соответствующими значениями
+                        foreach (ComboBoxItem item in SubjectComboBox.Items)
+                        {
+                            if (item.Content.ToString() == _selectedRow["Предмет"].ToString())
+                            {
+                                SubjectComboBox.SelectedItem = item;
+                                break;
+                            }
+                        }
+
+                        foreach (ComboBoxItem item in TeacherComboBox.Items)
+                        {
+                            if (item.Content.ToString() == _selectedRow["Преподаватель"].ToString())
+                            {
+                                TeacherComboBox.SelectedItem = item;
+                                break;
+                            }
+                        }
+
+                        foreach (ComboBoxItem item in ClassroomComboBox.Items)
+                        {
+                            if (item.Content.ToString() == _selectedRow["Аудитория"].ToString())
+                            {
+                                ClassroomComboBox.SelectedItem = item;
+                                break;
+                            }
+                        }
+
+                        foreach (ComboBoxItem item in DayComboBox.Items)
+                        {
+                            if (item.Content.ToString() == _selectedRow["День недели"].ToString())
+                            {
+                                DayComboBox.SelectedItem = item;
+                                break;
+                            }
+                        }
+
+                        foreach (ComboBoxItem item in LessonTypeComboBox.Items)
+                        {
+                            if (item.Content.ToString() == _selectedRow["Тип занятия"].ToString())
+                            {
+                                LessonTypeComboBox.SelectedItem = item;
+                                break;
+                            }
+                        }
+
+                        // Заполняем номер пары
+                        LessonNumberTextBox.Text = _selectedRow["Номер пары"].ToString();
+
+                        // Заполняем четность недели
+                        WeekParityComboBox.SelectedIndex = _selectedRow["Четность недели"].ToString() == "Числитель" ? 0 : 1;
+
+                        // Заполняем состав группы
+                        GroupCompositionComboBox.SelectedIndex = _selectedRow["Состав группы"].ToString() == "Полная группа" ? 0 : 1;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при заполнении формы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -259,78 +504,118 @@ namespace Vuz_Shedule
 
             try
             {
+                if (!ValidateInput()) return;
+
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-
-                    // Получаем ID занятия
-                    string getIdQuery = @"
-                        SELECT z.id_zanyatia
-                        FROM RV_Zanyatie z
-                        JOIN RV_Prepodavatel pr ON z.id_prepodavatelya = pr.id_prepodavatelya
-                        JOIN RV_Predmet p ON z.id_predmeta = p.id_predmeta
-                        JOIN RV_Den_Nedeli dn ON z.id_den_nedeli = dn.id_den_nedeli
-                        WHERE CONCAT(pr.familia, ' ', pr.imya, ' ', pr.otchestvo) = @Teacher
-                        AND p.nazvanie_predmeta = @Subject
-                        AND dn.nazvanie = @Day
-                        AND z.nomer_pary = @LessonNumber";
-
-                    using (SqlCommand command = new SqlCommand(getIdQuery, connection))
+                    using (SqlTransaction transaction = connection.BeginTransaction())
                     {
-                        command.Parameters.AddWithValue("@Teacher", _selectedRow["Преподаватель"].ToString());
-                        command.Parameters.AddWithValue("@Subject", _selectedRow["Предмет"].ToString());
-                        command.Parameters.AddWithValue("@Day", _selectedRow["День недели"].ToString());
-                        command.Parameters.AddWithValue("@LessonNumber", _selectedRow["Номер пары"]);
-
-                        int zanyatieId = (int)command.ExecuteScalar();
-
-                        // Обновляем данные
-                        string updateQuery = @"
-                            UPDATE RV_Zanyatie 
-                            SET id_predmeta = @SubjectId,
-                                id_prepodavatelya = @TeacherId,
-                                id_auditorii = @ClassroomId,
-                                id_den_nedeli = @DayId,
-                                nomer_pary = @LessonNumber,
-                                chetnost_nedeli = @WeekParity,
-                                polnost_gruppy = @GroupComposition,
-                                id_tip_zanyatia = @LessonTypeId
-                            WHERE id_zanyatia = @ZanyatieId";
-
-                        using (SqlCommand updateCommand = new SqlCommand(updateQuery, connection))
+                        try
                         {
-                            updateCommand.Parameters.AddWithValue("@SubjectId", (SubjectComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                            updateCommand.Parameters.AddWithValue("@TeacherId", (TeacherComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                            updateCommand.Parameters.AddWithValue("@ClassroomId", (ClassroomComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                            updateCommand.Parameters.AddWithValue("@DayId", (DayComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                            updateCommand.Parameters.AddWithValue("@LessonNumber", int.Parse(LessonNumberTextBox.Text));
-                            updateCommand.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
-                            updateCommand.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
-                            updateCommand.Parameters.AddWithValue("@LessonTypeId", (LessonTypeComboBox.SelectedItem as ComboBoxItem)?.Tag);
-                            updateCommand.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+                            int zanyatieId = Convert.ToInt32(_selectedRow["ID"]);
 
-                            updateCommand.ExecuteNonQuery();
+                            // Удаляем старые связи с группами
+                            string deleteRaspisanieQuery = "DELETE FROM RV_Raspisanie_Gruppy WHERE id_zanyatia = @ZanyatieId";
+                            using (SqlCommand command = new SqlCommand(deleteRaspisanieQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+                                command.ExecuteNonQuery();
+                            }
+
+                            // Обновляем данные занятия
+                            string updateQuery = @"
+                                UPDATE RV_Zanyatie 
+                                SET id_predmeta = @SubjectId,
+                                    id_prepodavatelya = @TeacherId,
+                                    id_auditorii = @ClassroomId,
+                                    id_den_nedeli = @DayId,
+                                    nomer_pary = @LessonNumber,
+                                    chetnost_nedeli = @WeekParity,
+                                    polnost_gruppy = @GroupComposition,
+                                    id_tip_zanyatia = @LessonTypeId
+                                WHERE id_zanyatia = @ZanyatieId";
+
+                            using (SqlCommand command = new SqlCommand(updateQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@SubjectId", (SubjectComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@TeacherId", (TeacherComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@ClassroomId", (ClassroomComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@DayId", (DayComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@LessonNumber", int.Parse(LessonNumberTextBox.Text));
+                                command.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@LessonTypeId", (LessonTypeComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                                command.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+
+                                command.ExecuteNonQuery();
+                            }
+
+                            // Получаем список новых групп
+                            string selectGroupsQuery = @"
+                                SELECT id_gruppy 
+                                FROM RV_Gruppa 
+                                WHERE chetnost_nedeli = @WeekParity 
+                                AND polnost_gruppy = @GroupComposition";
+
+                            List<int> groupIds = new List<int>();
+                            using (SqlCommand command = new SqlCommand(selectGroupsQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@WeekParity", WeekParityComboBox.SelectedIndex == 0);
+                                command.Parameters.AddWithValue("@GroupComposition", GroupCompositionComboBox.SelectedIndex == 0);
+
+                                using (SqlDataReader reader = command.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        groupIds.Add(reader.GetInt32(0));
+                                    }
+                                }
+                            }
+
+                            // Добавляем новые связи с группами
+                            string insertRaspisanieQuery = @"
+                                INSERT INTO RV_Raspisanie_Gruppy (id_gruppy, id_zanyatia)
+                                VALUES (@GroupId, @ZanyatieId)";
+
+                            foreach (int groupId in groupIds)
+                            {
+                                using (SqlCommand command = new SqlCommand(insertRaspisanieQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@GroupId", groupId);
+                                    command.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+
+                            transaction.Commit();
                             MessageBox.Show("Занятие успешно обновлено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                            ClearForm();
                             LoadSchedule();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw new Exception($"Ошибка при обновлении данных: {ex.Message}");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при обновлении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedRow == null)
+            if (_selectedRow == null || _selectedRow["ID"] == null)
             {
                 MessageBox.Show("Пожалуйста, выберите запись для удаления", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var result = MessageBox.Show("Вы уверены, что хотите удалить эту запись?", "Подтверждение", 
+            var result = MessageBox.Show("Вы уверены, что хотите удалить эту запись?", "Подтверждение",
                                        MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
@@ -340,52 +625,61 @@ namespace Vuz_Shedule
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
-
-                        // Получаем ID занятия
-                        string getIdQuery = @"
-                            SELECT z.id_zanyatia
-                            FROM RV_Zanyatie z
-                            JOIN RV_Prepodavatel pr ON z.id_prepodavatelya = pr.id_prepodavatelya
-                            JOIN RV_Predmet p ON z.id_predmeta = p.id_predmeta
-                            JOIN RV_Den_Nedeli dn ON z.id_den_nedeli = dn.id_den_nedeli
-                            WHERE CONCAT(pr.familia, ' ', pr.imya, ' ', pr.otchestvo) = @Teacher
-                            AND p.nazvanie_predmeta = @Subject
-                            AND dn.nazvanie = @Day
-                            AND z.nomer_pary = @LessonNumber";
-
-                        using (SqlCommand command = new SqlCommand(getIdQuery, connection))
+                        using (SqlTransaction transaction = connection.BeginTransaction())
                         {
-                            command.Parameters.AddWithValue("@Teacher", _selectedRow["Преподаватель"].ToString());
-                            command.Parameters.AddWithValue("@Subject", _selectedRow["Предмет"].ToString());
-                            command.Parameters.AddWithValue("@Day", _selectedRow["День недели"].ToString());
-                            command.Parameters.AddWithValue("@LessonNumber", _selectedRow["Номер пары"]);
-
-                            int zanyatieId = (int)command.ExecuteScalar();
-
-                            // Удаляем связи в расписании групп
-                            string deleteRaspisanieQuery = "DELETE FROM RV_Raspisanie_Gruppy WHERE id_zanyatia = @ZanyatieId";
-                            using (SqlCommand deleteRaspisanieCommand = new SqlCommand(deleteRaspisanieQuery, connection))
+                            try
                             {
-                                deleteRaspisanieCommand.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
-                                deleteRaspisanieCommand.ExecuteNonQuery();
-                            }
+                                // Проверяем, есть ли связи в таблице RV_Administrator
+                                string checkAdminQuery = "SELECT COUNT(*) FROM RV_Administrator WHERE id_zanyatia = @ZanyatieId";
+                                int adminCount;
+                                using (SqlCommand command = new SqlCommand(checkAdminQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@ZanyatieId", Convert.ToInt32(_selectedRow["ID"]));
+                                    adminCount = (int)command.ExecuteScalar();
+                                }
 
-                            // Удаляем само занятие
-                            string deleteZanyatieQuery = "DELETE FROM RV_Zanyatie WHERE id_zanyatia = @ZanyatieId";
-                            using (SqlCommand deleteZanyatieCommand = new SqlCommand(deleteZanyatieQuery, connection))
+                                if (adminCount > 0)
+                                {
+                                    // Сначала удаляем связи в таблице RV_Administrator
+                                    string deleteAdminQuery = "UPDATE RV_Administrator SET id_zanyatia = NULL WHERE id_zanyatia = @ZanyatieId";
+                                    using (SqlCommand command = new SqlCommand(deleteAdminQuery, connection, transaction))
+                                    {
+                                        command.Parameters.AddWithValue("@ZanyatieId", Convert.ToInt32(_selectedRow["ID"]));
+                                        command.ExecuteNonQuery();
+                                    }
+                                }
+
+                                // Удаляем связи в расписании групп
+                                string deleteRaspisanieQuery = "DELETE FROM RV_Raspisanie_Gruppy WHERE id_zanyatia = @ZanyatieId";
+                                using (SqlCommand command = new SqlCommand(deleteRaspisanieQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@ZanyatieId", Convert.ToInt32(_selectedRow["ID"]));
+                                    command.ExecuteNonQuery();
+                                }
+
+                                // Удаляем само занятие
+                                string deleteZanyatieQuery = "DELETE FROM RV_Zanyatie WHERE id_zanyatia = @ZanyatieId";
+                                using (SqlCommand command = new SqlCommand(deleteZanyatieQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@ZanyatieId", Convert.ToInt32(_selectedRow["ID"]));
+                                    command.ExecuteNonQuery();
+                                }
+
+                                transaction.Commit();
+                                MessageBox.Show("Занятие успешно удалено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                                LoadSchedule();
+                            }
+                            catch (Exception ex)
                             {
-                                deleteZanyatieCommand.Parameters.AddWithValue("@ZanyatieId", zanyatieId);
-                                deleteZanyatieCommand.ExecuteNonQuery();
+                                transaction.Rollback();
+                                throw new Exception($"Ошибка при удалении данных: {ex.Message}");
                             }
-
-                            MessageBox.Show("Занятие успешно удалено!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                            LoadSchedule();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

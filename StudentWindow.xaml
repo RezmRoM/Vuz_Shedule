@@ -44,18 +44,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Header -->
-            <Button x:Name="BackButton"
-                    Style="{StaticResource RoleButtonStyle}"
-                    Width="60"
-                    Height="60"
-                    Margin="0,0,0,20"
-                    HorizontalAlignment="Left"
-                    Click="BackButton_Click">
-                <TextBlock Text="←" FontSize="24" Foreground="{StaticResource PrimaryColor}"/>
-            </Button>
-
-            <!-- Filters -->
             <Border Grid.Row="1"
                     CornerRadius="10"
                     Background="{StaticResource LightBackgroundColor}"
@@ -63,28 +51,39 @@
                     BorderThickness="1.5"
                     Margin="0,0,0,20"
                     Padding="15">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <ComboBox x:Name="FacultyComboBox"
-                              Style="{StaticResource FilterComboBoxStyle}"
-                              Width="250"/>
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button x:Name="BackButton" Padding="10,0,0,0"
+                                Style="{StaticResource RoleButtonStyle}"
+                                Width="60"
+                                Height="60"
+                                Click="BackButton_Click">
+                            <TextBlock Text="←" FontSize="24" Foreground="{StaticResource PrimaryColor}"/>
+                        </Button>
+                    </StackPanel>
 
-                    <ComboBox x:Name="CourseComboBox"
-                              Style="{StaticResource FilterComboBoxStyle}"
-                              Width="120"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <ComboBox x:Name="FacultyComboBox"
+                                  Style="{StaticResource FilterComboBoxStyle}"
+                                  Width="250"/>
 
-                    <ComboBox x:Name="GroupComboBox"
-                              Style="{StaticResource FilterComboBoxStyle}"
-                              Width="180"/>
+                        <ComboBox x:Name="CourseComboBox"
+                                  Style="{StaticResource FilterComboBoxStyle}"
+                                  Width="120"/>
 
-                    <Button Content="Показать"
-                            Style="{StaticResource RoleButtonStyle}"
-                            Width="150"
-                            Margin="10"
-                            Click="ShowScheduleButton_Click"/>
-                </StackPanel>
+                        <ComboBox x:Name="GroupComboBox"
+                                  Style="{StaticResource FilterComboBoxStyle}"
+                                  Width="180"/>
+
+                        <Button Content="Показать"
+                                Style="{StaticResource RoleButtonStyle}"
+                                Width="150"
+                                Margin="10"
+                                Click="ShowScheduleButton_Click"/>
+                    </StackPanel>
+                </Grid>
             </Border>
 
-            <!-- Schedule Table -->
             <Border Grid.Row="2"
                     CornerRadius="10"
                     Background="White"
