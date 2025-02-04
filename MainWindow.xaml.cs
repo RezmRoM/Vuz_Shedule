@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace Vuz_Shedule
 {
@@ -23,6 +24,41 @@ namespace Vuz_Shedule
         public MainWindow()
         {
             InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            AnimateCardAppearance(TeacherCard, 0);
+            AnimateCardAppearance(StudentCard, 0.2);
+            AnimateCardAppearance(AdminCard, 0.4);
+        }
+
+        private void AnimateCardAppearance(FrameworkElement card, double delay)
+        {
+            card.Opacity = 0;
+            card.RenderTransform = new TranslateTransform(0, 50);
+
+            var opacityAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromSeconds(0.8),
+                BeginTime = TimeSpan.FromSeconds(delay),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            var translateAnimation = new DoubleAnimation
+            {
+                From = 50,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.8),
+                BeginTime = TimeSpan.FromSeconds(delay),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            card.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
+            ((TranslateTransform)card.RenderTransform).BeginAnimation(TranslateTransform.YProperty, translateAnimation);
         }
 
         private void TeacherButton_Click(object sender, RoutedEventArgs e)

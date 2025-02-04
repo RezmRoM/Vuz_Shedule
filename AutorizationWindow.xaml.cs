@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Windows.Media.Animation;
 
 namespace Vuz_Shedule
 {
@@ -16,6 +17,7 @@ namespace Vuz_Shedule
         {
             InitializeComponent();
             _role = role;
+            this.Loaded += AutorizationWindow_Loaded;
 
             if (_role == "Администратор")
             {
@@ -24,6 +26,13 @@ namespace Vuz_Shedule
 
             EmailTextBox.Tag = "Email";
             PasswordBox.Tag = "Пароль";
+        }
+
+        private void AutorizationWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Запускаем анимацию появления формы
+            var storyboard = (Storyboard)FindResource("FormAppearAnimation");
+            storyboard.Begin();
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -107,14 +116,16 @@ namespace Vuz_Shedule
             }
         }
 
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            RegistrationWindow registrationWindow = new RegistrationWindow(_role);
+            registrationWindow.Show();
+            this.Close();
+        }
+
         private void RegisterLink_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (_role == "Преподаватель")
-            {
-                RegistrationWindow registrationWindow = new RegistrationWindow(_role);
-                registrationWindow.Show();
-                this.Close();
-            }
+            RegisterButton_Click(sender, new RoutedEventArgs());
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -124,4 +135,4 @@ namespace Vuz_Shedule
             this.Close();
         }
     }
-} 
+}

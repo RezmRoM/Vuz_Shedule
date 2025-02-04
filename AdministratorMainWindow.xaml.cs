@@ -22,6 +22,10 @@ namespace Vuz_Shedule
             InitializeComponent();
             LoadSchedule();
             LoadComboBoxes();
+            LoadGroups();
+            LoadTeachers();
+            LoadSubjects();
+            LoadClassrooms();
         }
 
         private void LoadComboBoxes()
@@ -687,6 +691,824 @@ namespace Vuz_Shedule
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             LoadSchedule();
+        }
+
+        private void LoadGroups()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"SELECT g.id_gruppy, g.nazvanie_gruppy, f.nazvanie_instituta, g.nomer_kursa, 
+                                   g.chetnost_nedeli, g.polnost_gruppy 
+                            FROM RV_Gruppa g 
+                            JOIN RV_Fakultet f ON g.id_fakultet = f.id_fakultet";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        GroupsDataGrid.ItemsSource = dataTable.DefaultView;
+                    }
+
+                    // Загрузка факультетов в ComboBox
+                    string facultyQuery = "SELECT id_fakultet, nazvanie_instituta FROM RV_Fakultet";
+                    using (SqlCommand command = new SqlCommand(facultyQuery, connection))
+                    {
+                        FacultyComboBox.Items.Clear();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ComboBoxItem item = new ComboBoxItem
+                                {
+                                    Content = reader["nazvanie_instituta"].ToString(),
+                                    Tag = reader["id_fakultet"]
+                                };
+                                FacultyComboBox.Items.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке групп: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SaveGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!ValidateGroupInput()) return;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"INSERT INTO RV_Gruppa (nazvanie_gruppy, id_fakultet, nomer_kursa, chetnost_nedeli, polnost_gruppy) 
+                           VALUES (@GroupName, @FacultyId, @CourseNumber, @WeekParity, @GroupComposition)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@GroupName", GroupNameTextBox.Text);
+                        command.Parameters.AddWithValue("@FacultyId", (FacultyComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                        command.Parameters.AddWithValue("@CourseNumber", int.Parse(CourseNumberTextBox.Text));
+                        command.Parameters.AddWithValue("@WeekParity", true); // По умолчанию
+                        command.Parameters.AddWithValue("@GroupComposition", true); // По умолчанию
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Группа успешно добавлена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearGroupForm();
+                    LoadGroups();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении группы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void AddGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClearGroupForm();
+        }
+
+        private void EditGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = GroupsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Выберите группу для редактирования", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"UPDATE RV_Gruppa 
+                           SET nazvanie_gruppy = @GroupName, 
+                               id_fakultet = @FacultyId, 
+                               nomer_kursa = @CourseNumber 
+                           WHERE id_gruppy = @GroupId";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@GroupName", GroupNameTextBox.Text);
+                        command.Parameters.AddWithValue("@FacultyId", (FacultyComboBox.SelectedItem as ComboBoxItem)?.Tag);
+                        command.Parameters.AddWithValue("@CourseNumber", int.Parse(CourseNumberTextBox.Text));
+                        command.Parameters.AddWithValue("@GroupId", Convert.ToInt32(selectedRow["id_gruppy"]));
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Группа успешно обновлена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearGroupForm();
+                    LoadGroups();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении группы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DeleteGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = GroupsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Выберите группу для удаления", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show("Вы уверены, что хотите удалить эту группу?", "Подтверждение",
+                               MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        using (SqlTransaction transaction = connection.BeginTransaction())
+                        {
+                            try
+                            {
+                                // Удаляем связи в расписании
+                                string deleteScheduleQuery = "DELETE FROM RV_Raspisanie_Gruppy WHERE id_gruppy = @GroupId";
+                                using (SqlCommand command = new SqlCommand(deleteScheduleQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@GroupId", Convert.ToInt32(selectedRow["id_gruppy"]));
+                                    command.ExecuteNonQuery();
+                                }
+
+                                // Удаляем группу
+                                string deleteGroupQuery = "DELETE FROM RV_Gruppa WHERE id_gruppy = @GroupId";
+                                using (SqlCommand command = new SqlCommand(deleteGroupQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@GroupId", Convert.ToInt32(selectedRow["id_gruppy"]));
+                                    command.ExecuteNonQuery();
+                                }
+
+                                transaction.Commit();
+                                MessageBox.Show("Группа успешно удалена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                                LoadGroups();
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                throw new Exception($"Ошибка при удалении группы: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void RefreshGroupsButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadGroups();
+        }
+
+        private bool ValidateGroupInput()
+        {
+            if (string.IsNullOrWhiteSpace(GroupNameTextBox.Text) ||
+                FacultyComboBox.SelectedItem == null ||
+                string.IsNullOrWhiteSpace(CourseNumberTextBox.Text))
+            {
+                MessageBox.Show("Пожалуйста, заполните все поля", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (!int.TryParse(CourseNumberTextBox.Text, out int courseNumber) || courseNumber < 1 || courseNumber > 6)
+            {
+                MessageBox.Show("Номер курса должен быть числом от 1 до 6", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ClearGroupForm()
+        {
+            GroupNameTextBox.Clear();
+            FacultyComboBox.SelectedIndex = -1;
+            CourseNumberTextBox.Clear();
+        }
+
+        private void LoadTeachers()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT id_prepodavatelya, familia, imya, otchestvo FROM RV_Prepodavatel";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        TeachersDataGrid.ItemsSource = dataTable.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке преподавателей: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SaveTeacherButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!ValidateTeacherInput()) return;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"INSERT INTO RV_Prepodavatel (familia, imya, otchestvo) 
+                           VALUES (@LastName, @FirstName, @MiddleName)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@LastName", TeacherLastNameTextBox.Text);
+                        command.Parameters.AddWithValue("@FirstName", TeacherFirstNameTextBox.Text);
+                        command.Parameters.AddWithValue("@MiddleName", TeacherMiddleNameTextBox.Text);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Преподаватель успешно добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearTeacherForm();
+                    LoadTeachers();
+                    LoadComboBoxes(); // Обновляем список преподавателей в комбобоксе на вкладке расписания
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении преподавателя: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void AddTeacherButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClearTeacherForm();
+        }
+
+        private void EditTeacherButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = TeachersDataGrid.SelectedItem as DataRowView;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Выберите преподавателя для редактирования", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = @"UPDATE RV_Prepodavatel 
+                           SET familia = @LastName, 
+                               imya = @FirstName, 
+                               otchestvo = @MiddleName 
+                           WHERE id_prepodavatelya = @TeacherId";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@LastName", TeacherLastNameTextBox.Text);
+                        command.Parameters.AddWithValue("@FirstName", TeacherFirstNameTextBox.Text);
+                        command.Parameters.AddWithValue("@MiddleName", TeacherMiddleNameTextBox.Text);
+                        command.Parameters.AddWithValue("@TeacherId", Convert.ToInt32(selectedRow["id_prepodavatelya"]));
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Преподаватель успешно обновлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearTeacherForm();
+                    LoadTeachers();
+                    LoadComboBoxes(); // Обновляем список преподавателей в комбобоксе на вкладке расписания
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении преподавателя: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DeleteTeacherButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = TeachersDataGrid.SelectedItem as DataRowView;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Выберите преподавателя для удаления", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show("Вы уверены, что хотите удалить этого преподавателя?", "Подтверждение",
+                               MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        using (SqlTransaction transaction = connection.BeginTransaction())
+                        {
+                            try
+                            {
+                                int teacherId = Convert.ToInt32(selectedRow["id_prepodavatelya"]);
+
+                                // Проверяем, есть ли связанные занятия
+                                string checkQuery = "SELECT COUNT(*) FROM RV_Zanyatie WHERE id_prepodavatelya = @TeacherId";
+                                using (SqlCommand command = new SqlCommand(checkQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@TeacherId", teacherId);
+                                    int count = (int)command.ExecuteScalar();
+                                    if (count > 0)
+                                    {
+                                        throw new Exception("Невозможно удалить преподавателя, так как у него есть назначенные занятия");
+                                    }
+                                }
+
+                                // Удаляем преподавателя
+                                string deleteQuery = "DELETE FROM RV_Prepodavatel WHERE id_prepodavatelya = @TeacherId";
+                                using (SqlCommand command = new SqlCommand(deleteQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@TeacherId", teacherId);
+                                    command.ExecuteNonQuery();
+                                }
+
+                                transaction.Commit();
+                                MessageBox.Show("Преподаватель успешно удален!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                                LoadTeachers();
+                                LoadComboBoxes(); // Обновляем список преподавателей в комбобоксе на вкладке расписания
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                throw new Exception($"Ошибка при удалении преподавателя: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void RefreshTeachersButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadTeachers();
+        }
+
+        private bool ValidateTeacherInput()
+        {
+            if (string.IsNullOrWhiteSpace(TeacherLastNameTextBox.Text) ||
+                string.IsNullOrWhiteSpace(TeacherFirstNameTextBox.Text) ||
+                string.IsNullOrWhiteSpace(TeacherMiddleNameTextBox.Text))
+            {
+                MessageBox.Show("Пожалуйста, заполните все поля", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ClearTeacherForm()
+        {
+            TeacherLastNameTextBox.Clear();
+            TeacherFirstNameTextBox.Clear();
+            TeacherMiddleNameTextBox.Clear();
+        }
+
+        private void LoadSubjects()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT id_predmeta, nazvanie_predmeta FROM RV_Predmet";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        SubjectsDataGrid.ItemsSource = dataTable.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке предметов: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SaveSubjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!ValidateSubjectInput()) return;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "INSERT INTO RV_Predmet (nazvanie_predmeta) VALUES (@SubjectName)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@SubjectName", SubjectNameTextBox.Text);
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Предмет успешно добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearSubjectForm();
+                    LoadSubjects();
+                    LoadComboBoxes(); // Обновляем список предметов в комбобоксе на вкладке расписания
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении предмета: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void AddSubjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClearSubjectForm();
+        }
+
+        private void EditSubjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = SubjectsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Выберите предмет для редактирования", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "UPDATE RV_Predmet SET nazvanie_predmeta = @SubjectName WHERE id_predmeta = @SubjectId";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@SubjectName", SubjectNameTextBox.Text);
+                        command.Parameters.AddWithValue("@SubjectId", Convert.ToInt32(selectedRow["id_predmeta"]));
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Предмет успешно обновлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearSubjectForm();
+                    LoadSubjects();
+                    LoadComboBoxes(); // Обновляем список предметов в комбобоксе на вкладке расписания
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении предмета: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DeleteSubjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = SubjectsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Выберите предмет для удаления", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show("Вы уверены, что хотите удалить этот предмет?", "Подтверждение",
+                               MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        using (SqlTransaction transaction = connection.BeginTransaction())
+                        {
+                            try
+                            {
+                                int subjectId = Convert.ToInt32(selectedRow["id_predmeta"]);
+
+                                // Проверяем, есть ли связанные занятия
+                                string checkQuery = "SELECT COUNT(*) FROM RV_Zanyatie WHERE id_predmeta = @SubjectId";
+                                using (SqlCommand command = new SqlCommand(checkQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@SubjectId", subjectId);
+                                    int count = (int)command.ExecuteScalar();
+                                    if (count > 0)
+                                    {
+                                        throw new Exception("Невозможно удалить предмет, так как он используется в расписании");
+                                    }
+                                }
+
+                                // Удаляем предмет
+                                string deleteQuery = "DELETE FROM RV_Predmet WHERE id_predmeta = @SubjectId";
+                                using (SqlCommand command = new SqlCommand(deleteQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@SubjectId", subjectId);
+                                    command.ExecuteNonQuery();
+                                }
+
+                                transaction.Commit();
+                                MessageBox.Show("Предмет успешно удален!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                                LoadSubjects();
+                                LoadComboBoxes(); // Обновляем список предметов в комбобоксе на вкладке расписания
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                throw new Exception($"Ошибка при удалении предмета: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void RefreshSubjectsButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadSubjects();
+        }
+
+        private bool ValidateSubjectInput()
+        {
+            if (string.IsNullOrWhiteSpace(SubjectNameTextBox.Text))
+            {
+                MessageBox.Show("Пожалуйста, введите название предмета", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ClearSubjectForm()
+        {
+            SubjectNameTextBox.Clear();
+        }
+
+        private void LoadClassrooms()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT id_auditorii, nazvanie_auditorii FROM RV_Auditoria";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        ClassroomsDataGrid.ItemsSource = dataTable.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке аудиторий: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SaveClassroomButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!ValidateClassroomInput()) return;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "INSERT INTO RV_Auditoria (nazvanie_auditorii) VALUES (@ClassroomName)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ClassroomName", ClassroomNameTextBox.Text);
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Аудитория успешно добавлена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearClassroomForm();
+                    LoadClassrooms();
+                    LoadComboBoxes(); // Обновляем список аудиторий в комбобоксе на вкладке расписания
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении аудитории: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void AddClassroomButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClearClassroomForm();
+        }
+
+        private void EditClassroomButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = ClassroomsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Выберите аудиторию для редактирования", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "UPDATE RV_Auditoria SET nazvanie_auditorii = @ClassroomName WHERE id_auditorii = @ClassroomId";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ClassroomName", ClassroomNameTextBox.Text);
+                        command.Parameters.AddWithValue("@ClassroomId", Convert.ToInt32(selectedRow["id_auditorii"]));
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Аудитория успешно обновлена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearClassroomForm();
+                    LoadClassrooms();
+                    LoadComboBoxes(); // Обновляем список аудиторий в комбобоксе на вкладке расписания
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при обновлении аудитории: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DeleteClassroomButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = ClassroomsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow == null)
+            {
+                MessageBox.Show("Выберите аудиторию для удаления", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show("Вы уверены, что хотите удалить эту аудиторию?", "Подтверждение",
+                               MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        using (SqlTransaction transaction = connection.BeginTransaction())
+                        {
+                            try
+                            {
+                                int classroomId = Convert.ToInt32(selectedRow["id_auditorii"]);
+
+                                // Проверяем, есть ли связанные занятия
+                                string checkQuery = "SELECT COUNT(*) FROM RV_Zanyatie WHERE id_auditorii = @ClassroomId";
+                                using (SqlCommand command = new SqlCommand(checkQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@ClassroomId", classroomId);
+                                    int count = (int)command.ExecuteScalar();
+                                    if (count > 0)
+                                    {
+                                        throw new Exception("Невозможно удалить аудиторию, так как она используется в расписании");
+                                    }
+                                }
+
+                                // Удаляем аудиторию
+                                string deleteQuery = "DELETE FROM RV_Auditoria WHERE id_auditorii = @ClassroomId";
+                                using (SqlCommand command = new SqlCommand(deleteQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@ClassroomId", classroomId);
+                                    command.ExecuteNonQuery();
+                                }
+
+                                transaction.Commit();
+                                MessageBox.Show("Аудитория успешно удалена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                                LoadClassrooms();
+                                LoadComboBoxes(); // Обновляем список аудиторий в комбобоксе на вкладке расписания
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                throw new Exception($"Ошибка при удалении аудитории: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void RefreshClassroomsButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadClassrooms();
+        }
+
+        private bool ValidateClassroomInput()
+        {
+            if (string.IsNullOrWhiteSpace(ClassroomNameTextBox.Text))
+            {
+                MessageBox.Show("Пожалуйста, введите номер аудитории", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ClearClassroomForm()
+        {
+            ClassroomNameTextBox.Clear();
+        }
+
+        private void GroupsDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var selectedRow = GroupsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow != null)
+            {
+                GroupNameTextBox.Text = selectedRow["nazvanie_gruppy"].ToString();
+                CourseNumberTextBox.Text = selectedRow["nomer_kursa"].ToString();
+
+                // Выбираем соответствующий факультет в ComboBox
+                foreach (ComboBoxItem item in FacultyComboBox.Items)
+                {
+                    if (item.Content.ToString() == selectedRow["nazvanie_instituta"].ToString())
+                    {
+                        FacultyComboBox.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void TeachersDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var selectedRow = TeachersDataGrid.SelectedItem as DataRowView;
+            if (selectedRow != null)
+            {
+                TeacherLastNameTextBox.Text = selectedRow["familia"].ToString();
+                TeacherFirstNameTextBox.Text = selectedRow["imya"].ToString();
+                TeacherMiddleNameTextBox.Text = selectedRow["otchestvo"].ToString();
+            }
+        }
+
+        private void SubjectsDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var selectedRow = SubjectsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow != null)
+            {
+                SubjectNameTextBox.Text = selectedRow["nazvanie_predmeta"].ToString();
+            }
+        }
+
+        private void ClassroomsDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var selectedRow = ClassroomsDataGrid.SelectedItem as DataRowView;
+            if (selectedRow != null)
+            {
+                ClassroomNameTextBox.Text = selectedRow["nazvanie_auditorii"].ToString();
+            }
         }
     }
 }

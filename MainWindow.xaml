@@ -13,6 +13,86 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <!-- Анимация для карточек при наведении -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Height" Value="380"/>
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform Y="0"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="15" 
+                                    Color="{StaticResource SecondaryColorValue}" 
+                                    Opacity="0.2"
+                                    ShadowDepth="5"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation 
+                                Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
+                                To="25" Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation 
+                                Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"
+                                To="0.4" Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation 
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                To="-10" Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation 
+                                Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)"
+                                To="15" Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation 
+                                Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)"
+                                To="0.2" Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation 
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                To="0" Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
         <!-- Ресурс для тени текста -->
         <DropShadowEffect x:Key="TitleShadowEffect"
                           Color="{StaticResource SecondaryColorValue}"
@@ -52,14 +132,34 @@
                             </Border.Effect>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource LightBackgroundColor}"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
-                                <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="{StaticResource SecondaryColor}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#D2B48C"/>
-                            </Trigger>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="border"
+                                                      Storyboard.TargetProperty="Background.Color"
+                                                      To="#F8F3E6"
+                                                      Duration="0:0:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetName="border"
+                                                       Storyboard.TargetProperty="Effect.BlurRadius"
+                                                       To="10"
+                                                       Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="border"
+                                                      Storyboard.TargetProperty="Background.Color"
+                                                      To="#FFFFFF"
+                                                      Duration="0:0:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetName="border"
+                                                       Storyboard.TargetProperty="Effect.BlurRadius"
+                                                       To="5"
+                                                       Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -111,17 +211,9 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Преподаватель -->
-                <Border Width="280" Height="380" 
-                        Margin="20" 
-                        Background="White"
-                        CornerRadius="15"
-                        BorderBrush="{StaticResource SecondaryColor}"
-                        BorderThickness="1.5">
-                    <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" 
-                                        Color="{StaticResource SecondaryColorValue}" 
-                                        Opacity="0.2"/>
-                    </Border.Effect>
+                <Border x:Name="TeacherCard"
+                        Style="{StaticResource CardStyle}"
+                        Grid.Column="0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -139,6 +231,12 @@
                                 <Image.Clip>
                                     <RectangleGeometry Rect="0,0,280,280" RadiusX="15" RadiusY="15"/>
                                 </Image.Clip>
+                                <Image.Effect>
+                                    <DropShadowEffect BlurRadius="10" 
+                                                    Color="{StaticResource SecondaryColorValue}" 
+                                                    Opacity="0.2"
+                                                    ShadowDepth="5"/>
+                                </Image.Effect>
                             </Image>
                         </Border>
 
@@ -153,18 +251,9 @@
                 </Border>
 
                 <!-- Студент -->
-                <Border Width="280" Height="380" 
-                        Margin="20" 
-                        Background="White"
-                        CornerRadius="15"
-                        BorderBrush="{StaticResource SecondaryColor}"
-                        BorderThickness="1.5"
+                <Border x:Name="StudentCard"
+                        Style="{StaticResource CardStyle}"
                         Grid.Column="1">
-                    <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" 
-                                        Color="{StaticResource SecondaryColorValue}" 
-                                        Opacity="0.2"/>
-                    </Border.Effect>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -182,6 +271,12 @@
                                 <Image.Clip>
                                     <RectangleGeometry Rect="0,0,280,280" RadiusX="15" RadiusY="15"/>
                                 </Image.Clip>
+                                <Image.Effect>
+                                    <DropShadowEffect BlurRadius="10" 
+                                                    Color="{StaticResource SecondaryColorValue}" 
+                                                    Opacity="0.2"
+                                                    ShadowDepth="5"/>
+                                </Image.Effect>
                             </Image>
                         </Border>
 
@@ -196,18 +291,9 @@
                 </Border>
 
                 <!-- Администратор -->
-                <Border Width="280" Height="380" 
-                        Margin="20" 
-                        Background="White"
-                        CornerRadius="15"
-                        BorderBrush="{StaticResource SecondaryColor}"
-                        BorderThickness="1.5"
+                <Border x:Name="AdminCard"
+                        Style="{StaticResource CardStyle}"
                         Grid.Column="2">
-                    <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" 
-                                        Color="{StaticResource SecondaryColorValue}" 
-                                        Opacity="0.2"/>
-                    </Border.Effect>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -225,6 +311,12 @@
                                 <Image.Clip>
                                     <RectangleGeometry Rect="0,0,280,280" RadiusX="15" RadiusY="15"/>
                                 </Image.Clip>
+                                <Image.Effect>
+                                    <DropShadowEffect BlurRadius="10" 
+                                                    Color="{StaticResource SecondaryColorValue}" 
+                                                    Opacity="0.2"
+                                                    ShadowDepth="5"/>
+                                </Image.Effect>
                             </Image>
                         </Border>
 
