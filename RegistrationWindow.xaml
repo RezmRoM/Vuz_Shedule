@@ -1,0 +1,135 @@
+<Window x:Class="Vuz_Shedule.RegistrationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Регистрация" 
+        WindowState="Maximized"
+        MinWidth="1280"
+        MinHeight="720"
+        FontFamily="Bookman Old Style"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Background>
+        <ImageBrush ImageSource="https://i.postimg.cc/9QmW3vJC/image-50.png" 
+                    Stretch="UniformToFill" 
+                    Opacity="0.95"/>
+    </Window.Background>
+
+    <Border Margin="40" 
+            CornerRadius="20" 
+            Background="{StaticResource BackgroundColor}" 
+            BorderBrush="{StaticResource SecondaryColor}" 
+            BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" 
+                            Color="{StaticResource SecondaryColorValue}" 
+                            Opacity="0.2"/>
+        </Border.Effect>
+
+        <Grid>
+            <!-- Кнопка "Назад" в верхнем левом углу -->
+            <Button x:Name="BackButton"
+                    Style="{StaticResource RoleButtonStyle}"
+                    Width="60"
+                    Height="60"
+                    Margin="20,10,0,0" 
+                HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Click="BackButton_Click">
+                <TextBlock Text="←" 
+                          FontSize="24" 
+                          Foreground="{StaticResource PrimaryColor}"/>
+            </Button>
+
+            <!-- Контент регистрации (остается центрированным) -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          VerticalAlignment="Center">
+                <!-- Центрируем по вертикали -->
+                <Border CornerRadius="15"
+                        Background="{StaticResource LightBackgroundColor}"
+                        BorderBrush="{StaticResource SecondaryColor}"
+                        BorderThickness="1.5"
+                        Width="500"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="15" 
+                                        Color="{StaticResource SecondaryColorValue}" 
+                                        Opacity="0.2"/>
+                    </Border.Effect>
+
+                    <StackPanel Margin="30" VerticalAlignment="Center">
+                        <TextBlock Text="Регистрация"
+                                   FontSize="28"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryColor}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,30"/>
+
+                        <TextBlock Text="Email"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,0,0,5"/>
+                        <TextBox x:Name="EmailTextBox"
+                                 Style="{StaticResource AuthTextBoxStyle}"
+                                 Tag="Email"/>
+
+                        <TextBlock Text="Фамилия"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
+                        <TextBox x:Name="LastNameTextBox"
+                                 Style="{StaticResource AuthTextBoxStyle}"
+                                 Tag="Фамилия"/>
+
+                        <TextBlock Text="Имя"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
+                        <TextBox x:Name="FirstNameTextBox"
+                                 Style="{StaticResource AuthTextBoxStyle}"
+                                 Tag="Имя"/>
+
+                        <TextBlock Text="Отчество"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
+                        <TextBox x:Name="MiddleNameTextBox"
+                                 Style="{StaticResource AuthTextBoxStyle}"
+                                 Tag="Отчество"/>
+
+                        <TextBlock Text="Пароль"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
+                        <PasswordBox x:Name="PasswordBox"
+                                     Style="{StaticResource AuthPasswordBoxStyle}"
+                                     Tag="Пароль"/>
+
+                        <TextBlock Text="Подтверждение пароля"
+                                 FontSize="16"
+                                 Foreground="{StaticResource PrimaryColor}"
+                                 Margin="0,20,0,5"/>
+                        <PasswordBox x:Name="ConfirmPasswordBox"
+                                     Style="{StaticResource AuthPasswordBoxStyle}"
+                                     Tag="Подтверждение пароля"/>
+
+                        <Button Content="Зарегистрироваться"
+                                Style="{StaticResource RoleButtonStyle}"
+                                Click="RegisterButton_Click"
+                                Margin="0,20"/>
+
+                        <TextBlock Text="Уже есть аккаунт? Войти"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{StaticResource SecondaryColor}"
+                                   Cursor="Hand"
+                                   TextDecorations="Underline"
+                                   MouseDown="LoginLink_MouseDown"/>
+                    </StackPanel>
+                </Border>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Window>

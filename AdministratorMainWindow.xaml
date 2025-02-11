@@ -1,0 +1,722 @@
+﻿<Window x:Class="Vuz_Shedule.AdministratorMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Панель администратора" 
+        WindowState="Maximized"
+        MinWidth="1280"
+        MinHeight="720"
+        FontFamily="Bookman Old Style"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style x:Key="ModernDataGridStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#FFF8F0"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#DDDDDD"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#DDDDDD"/>
+            <Setter Property="RowHeight" Value="35"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Style.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#8B4513"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Height" Value="40"/>
+                    <Setter Property="Padding" Value="10,0"/>
+                </Style>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding" Value="10,0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridCell">
+                                <Border Padding="{TemplateBinding Padding}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Background="{TemplateBinding Background}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+
+    <Window.Background>
+        <ImageBrush ImageSource="https://i.postimg.cc/9QmW3vJC/image-50.png" 
+                    Stretch="UniformToFill" 
+                    Opacity="0.95"/>
+    </Window.Background>
+
+    <Border Margin="40" 
+            CornerRadius="20" 
+            Background="{StaticResource BackgroundColor}" 
+            BorderBrush="{StaticResource SecondaryColor}" 
+            BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" 
+                            Color="{StaticResource SecondaryColorValue}" 
+                            Opacity="0.2"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Верхняя панель -->
+            <Grid Grid.Row="0" Margin="20,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Кнопка "Назад" -->
+                <Button x:Name="BackButton"
+                        Style="{StaticResource RoleButtonStyle}"
+                        Width="60"
+                        Height="60"
+                        Click="BackButton_Click">
+                    <TextBlock Text="←" 
+                              FontSize="24" 
+                              Foreground="{StaticResource PrimaryColor}"/>
+                </Button>
+
+                <!-- Заголовок -->
+                <TextBlock Text="Панель управления администратора"
+                          Grid.Column="1"
+                          FontSize="32"
+                          FontWeight="Bold"
+                          Foreground="{StaticResource PrimaryColor}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+
+                <!-- Кнопка выхода -->
+                <Button Content="Выход"
+                        Grid.Column="2"
+                        Style="{StaticResource RoleButtonStyle}"
+                        Width="120"
+                        Height="40"/>
+            </Grid>
+
+            <!-- TabControl -->
+            <TabControl Grid.Row="1" Margin="20,0,20,20">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TabItem">
+                                    <Border Name="Border" 
+                                            BorderThickness="1,1,1,0" 
+                                            BorderBrush="{StaticResource SecondaryColor}" 
+                                            CornerRadius="4,4,0,0" 
+                                            Margin="2,0">
+                                        <ContentPresenter x:Name="ContentSite"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center"
+                                                        ContentSource="Header"
+                                                        Margin="10,5"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundColor}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="False">
+                                            <Setter TargetName="Border" Property="Background" Value="{StaticResource LightBackgroundColor}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+
+                <!-- Вкладка Расписание -->
+                <TabItem Header="Расписание">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Форма добавления/редактирования -->
+                        <Border Grid.Column="0"
+                                CornerRadius="15"
+                                Background="{StaticResource LightBackgroundColor}"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="20"
+                                Margin="0,0,20,0">
+                            <StackPanel>
+                                <TextBlock Text="Управление занятием"
+                                          FontSize="20"
+                                          FontWeight="Bold"
+                                          Foreground="{StaticResource PrimaryColor}"
+                                          HorizontalAlignment="Center"
+                                          Margin="0,0,0,20"/>
+
+                                <ComboBox x:Name="SubjectComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите предмет"
+                                          Margin="0,0,0,15"/>
+
+                                <ComboBox x:Name="TeacherComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите преподавателя"
+                                          Margin="0,0,0,15"/>
+
+                                <ComboBox x:Name="ClassroomComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите аудиторию"
+                                          Margin="0,0,0,15"/>
+
+                                <ComboBox x:Name="DayComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите день недели"
+                                          Margin="0,0,0,15"/>
+
+                                <TextBox x:Name="LessonNumberTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите номер пары (1-8)"
+                                         Margin="0,0,0,15"/>
+
+                                <ComboBox x:Name="LessonTypeComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите тип занятия"
+                                          Margin="0,0,0,15"/>
+
+                                <ComboBox x:Name="WeekParityComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите четность недели"
+                                          Margin="0,0,0,20">
+                                    <ComboBoxItem Content="Числитель"/>
+                                    <ComboBoxItem Content="Знаменатель"/>
+                                </ComboBox>
+
+                                <ComboBox x:Name="GroupCompositionComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите состав группы"
+                                          Margin="0,0,0,20">
+                                    <ComboBoxItem Content="Полная группа"/>
+                                    <ComboBoxItem Content="Подгруппа"/>
+                                </ComboBox>
+
+                                <Button Content="Сохранить"
+                                        Style="{StaticResource RoleButtonStyle}"
+                                        Click="SaveButton_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Таблица расписания -->
+                        <Border Grid.Column="1"
+                                CornerRadius="15"
+                                Background="White"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <DataGrid x:Name="ScheduleDataGrid"
+                                          Style="{StaticResource ModernDataGridStyle}"
+                                          AutoGenerateColumns="False"
+                                          SelectionChanged="ScheduleDataGrid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="День недели" Binding="{Binding [День недели]}" Width="*"/>
+                                        <DataGridTextColumn Header="Номер пары" Binding="{Binding [Номер пары]}" Width="100"/>
+                                        <DataGridTextColumn Header="Предмет" Binding="{Binding [Предмет]}" Width="*"/>
+                                        <DataGridTextColumn Header="Группа" Binding="{Binding [Группа]}" Width="*"/>
+                                        <DataGridTextColumn Header="Тип занятия" Binding="{Binding [Тип занятия]}" Width="120"/>
+                                        <DataGridTextColumn Header="Преподаватель" Binding="{Binding [Преподаватель]}" Width="*"/>
+                                        <DataGridTextColumn Header="Аудитория" Binding="{Binding [Аудитория]}" Width="100"/>
+                                        <DataGridTextColumn Header="Четность недели" Binding="{Binding [Четность недели]}" Width="120"/>
+                                        <DataGridTextColumn Header="Состав группы" Binding="{Binding [Состав группы]}" Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Кнопки управления -->
+                                <StackPanel Grid.Row="1" 
+                                          Orientation="Horizontal" 
+                                          HorizontalAlignment="Center" 
+                                          Margin="0,10,0,0">
+                                    <Button Content="Добавить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="AddButton_Click"/>
+
+                                    <Button Content="Изменить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="EditButton_Click"/>
+
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="DeleteButton_Click"/>
+
+                                    <Button Content="Обновить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="RefreshButton_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <!-- Вкладка Группы -->
+                <TabItem Header="Группы">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Форма управления группами -->
+                        <Border Grid.Column="0"
+                                CornerRadius="15"
+                                Background="{StaticResource LightBackgroundColor}"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="20"
+                                Margin="0,0,20,0">
+                            <StackPanel>
+                                <TextBlock Text="Управление группами"
+                                          FontSize="20"
+                                          FontWeight="Bold"
+                                          Foreground="{StaticResource PrimaryColor}"
+                                          HorizontalAlignment="Center"
+                                          Margin="0,0,0,20"/>
+
+                                <TextBox x:Name="GroupNameTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите название группы"
+                                         Margin="0,0,0,15"/>
+
+                                <ComboBox x:Name="FacultyComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите факультет"
+                                          Margin="0,0,0,15"/>
+
+                                <TextBox x:Name="CourseNumberTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите номер курса (1-6)"
+                                         Margin="0,0,0,15"/>
+
+                                <ComboBox x:Name="GroupFormCompositionComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите состав группы"
+                                          Margin="0,0,0,15">
+                                    <ComboBoxItem Content="Полная группа"/>
+                                    <ComboBoxItem Content="Подгруппа"/>
+                                </ComboBox>
+
+                                <ComboBox x:Name="GroupFormWeekParityComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите четность недели"
+                                          Margin="0,0,0,20">
+                                    <ComboBoxItem Content="Числитель"/>
+                                    <ComboBoxItem Content="Знаменатель"/>
+                                </ComboBox>
+
+                                <Button Content="Сохранить"
+                                        Style="{StaticResource RoleButtonStyle}"
+                                        Margin="0,20,0,0"
+                                        Click="SaveGroupButton_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Таблица групп -->
+                        <Border Grid.Column="1"
+                                CornerRadius="15"
+                                Background="White"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <DataGrid x:Name="GroupsDataGrid"
+                                          Style="{StaticResource ModernDataGridStyle}"
+                                          AutoGenerateColumns="False"
+                                          SelectionChanged="GroupsDataGrid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Группа" Binding="{Binding [Группа]}" Width="*"/>
+                                        <DataGridTextColumn Header="Факультет" Binding="{Binding [Факультет]}" Width="*"/>
+                                        <DataGridTextColumn Header="Курс" Binding="{Binding [Курс]}" Width="100"/>
+                                        <DataGridTextColumn Header="Состав группы" Binding="{Binding [Состав группы]}" Width="120"/>
+                                        <DataGridTextColumn Header="Четность недели" Binding="{Binding [Четность недели]}" Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Кнопки управления -->
+                                <StackPanel Grid.Row="1" 
+                                          Orientation="Horizontal" 
+                                          HorizontalAlignment="Center" 
+                                          Margin="0,10,0,0">
+                                    <Button Content="Добавить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="AddGroupButton_Click"/>
+
+                                    <Button Content="Изменить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="EditGroupButton_Click"/>
+
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="DeleteGroupButton_Click"/>
+
+                                    <Button Content="Обновить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="RefreshGroupsButton_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <!-- Вкладка Преподаватели -->
+                <TabItem Header="Преподаватели">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Форма управления преподавателями -->
+                        <Border Grid.Column="0"
+                                CornerRadius="15"
+                                Background="{StaticResource LightBackgroundColor}"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="20"
+                                Margin="0,0,20,0">
+                            <StackPanel>
+                                <TextBlock Text="Управление преподавателями"
+                                          FontSize="20"
+                                          FontWeight="Bold"
+                                          Foreground="{StaticResource PrimaryColor}"
+                                          HorizontalAlignment="Center"
+                                          Margin="0,0,0,20"/>
+
+                                <TextBox x:Name="TeacherLastNameTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите фамилию"/>
+
+                                <TextBox x:Name="TeacherFirstNameTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите имя"/>
+
+                                <TextBox x:Name="TeacherMiddleNameTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите отчество"/>
+
+                                <TextBox x:Name="TeacherEmailTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите email"/>
+
+                                <Button Content="Сохранить"
+                                        Style="{StaticResource RoleButtonStyle}"
+                                        Margin="0,20,0,0"
+                                        Click="SaveTeacherButton_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Таблица преподавателей -->
+                        <Border Grid.Column="1"
+                                CornerRadius="15"
+                                Background="White"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <DataGrid x:Name="TeachersDataGrid"
+                                          Style="{StaticResource ModernDataGridStyle}"
+                                          AutoGenerateColumns="False"
+                                          SelectionChanged="TeachersDataGrid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Фамилия" Binding="{Binding [Фамилия]}" Width="*"/>
+                                        <DataGridTextColumn Header="Имя" Binding="{Binding [Имя]}" Width="*"/>
+                                        <DataGridTextColumn Header="Отчество" Binding="{Binding [Отчество]}" Width="*"/>
+                                        <DataGridTextColumn Header="Email" Binding="{Binding [Email]}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Кнопки управления -->
+                                <StackPanel Grid.Row="1" 
+                                          Orientation="Horizontal" 
+                                          HorizontalAlignment="Center" 
+                                          Margin="0,10,0,0">
+                                    <Button Content="Добавить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="AddTeacherButton_Click"/>
+
+                                    <Button Content="Изменить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="EditTeacherButton_Click"/>
+
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="DeleteTeacherButton_Click"/>
+
+                                    <Button Content="Обновить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="RefreshTeachersButton_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <!-- Вкладка Предметы -->
+                <TabItem Header="Предметы">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Форма управления предметами -->
+                        <Border Grid.Column="0"
+                                CornerRadius="15"
+                                Background="{StaticResource LightBackgroundColor}"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="20"
+                                Margin="0,0,20,0">
+                            <StackPanel>
+                                <TextBlock Text="Управление предметами"
+                                          FontSize="20"
+                                          FontWeight="Bold"
+                                          Foreground="{StaticResource PrimaryColor}"
+                                          HorizontalAlignment="Center"
+                                          Margin="0,0,0,20"/>
+
+                                <TextBox x:Name="SubjectNameTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите название предмета"
+                                         Margin="0,0,0,15"/>
+
+                                <ComboBox x:Name="SubjectTeacherComboBox"
+                                          Style="{StaticResource FilterComboBoxStyle}"
+                                          Tag="Выберите преподавателя"
+                                          Margin="0,0,0,20"/>
+
+                                <Button Content="Сохранить"
+                                        Style="{StaticResource RoleButtonStyle}"
+                                        Margin="0,20,0,0"
+                                        Click="SaveSubjectButton_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Таблица предметов -->
+                        <Border Grid.Column="1"
+                                CornerRadius="15"
+                                Background="White"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <DataGrid x:Name="SubjectsDataGrid"
+                                          Style="{StaticResource ModernDataGridStyle}"
+                                          AutoGenerateColumns="False"
+                                          SelectionChanged="SubjectsDataGrid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Название предмета" Binding="{Binding [Название предмета]}" Width="*"/>
+                                        <DataGridTextColumn Header="Преподаватель" Binding="{Binding [Преподаватель]}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Кнопки управления -->
+                                <StackPanel Grid.Row="1" 
+                                          Orientation="Horizontal" 
+                                          HorizontalAlignment="Center" 
+                                          Margin="0,10,0,0">
+                                    <Button Content="Добавить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="AddSubjectButton_Click"/>
+
+                                    <Button Content="Изменить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="EditSubjectButton_Click"/>
+
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="DeleteSubjectButton_Click"/>
+
+                                    <Button Content="Обновить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="RefreshSubjectsButton_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <!-- Вкладка Аудитории -->
+                <TabItem Header="Аудитории">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Форма управления аудиториями -->
+                        <Border Grid.Column="0"
+                                CornerRadius="15"
+                                Background="{StaticResource LightBackgroundColor}"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="20"
+                                Margin="0,0,20,0">
+                            <StackPanel>
+                                <TextBlock Text="Управление аудиториями"
+                                          FontSize="20"
+                                          FontWeight="Bold"
+                                          Foreground="{StaticResource PrimaryColor}"
+                                          HorizontalAlignment="Center"
+                                          Margin="0,0,0,20"/>
+
+                                <TextBox x:Name="ClassroomNameTextBox"
+                                         Style="{StaticResource AuthTextBoxStyle}"
+                                         Tag="Введите номер аудитории"/>
+
+                                <Button Content="Сохранить"
+                                        Style="{StaticResource RoleButtonStyle}"
+                                        Margin="0,20,0,0"
+                                        Click="SaveClassroomButton_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Таблица аудиторий -->
+                        <Border Grid.Column="1"
+                                CornerRadius="15"
+                                Background="White"
+                                BorderBrush="{StaticResource SecondaryColor}"
+                                BorderThickness="1.5"
+                                Padding="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <DataGrid x:Name="ClassroomsDataGrid"
+                                          Style="{StaticResource ModernDataGridStyle}"
+                                          AutoGenerateColumns="False"
+                                          SelectionChanged="ClassroomsDataGrid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Аудитория" Binding="{Binding [Аудитория]}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Кнопки управления -->
+                                <StackPanel Grid.Row="1" 
+                                          Orientation="Horizontal" 
+                                          HorizontalAlignment="Center" 
+                                          Margin="0,10,0,0">
+                                    <Button Content="Добавить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="AddClassroomButton_Click"/>
+
+                                    <Button Content="Изменить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="EditClassroomButton_Click"/>
+
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="DeleteClassroomButton_Click"/>
+
+                                    <Button Content="Обновить"
+                                            Style="{StaticResource RoleButtonStyle}"
+                                            Width="120"
+                                            Height="40"
+                                            Margin="10,0"
+                                            Click="RefreshClassroomsButton_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Border>
+</Window>
